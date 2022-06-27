@@ -9,7 +9,7 @@ library(survival)
 
 
 # Lendo os dados e analisando sua estrutura
-path <- 'base_de_dados/hantavir2.n280.2.08.05.17.csv'
+path <- 'base_de_dados/hantavir.csv'
 dados <- read.csv(path, 
     header = TRUE, sep = ';')
 summary(dados)
