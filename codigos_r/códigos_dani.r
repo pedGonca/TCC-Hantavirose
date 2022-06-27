@@ -6,7 +6,7 @@
 # Pacotes
 library(tidyverse)
 library(survival)
-
+library(ggfortify)
 
 # Lendo os dados e analisando sua estrutura
 path <- 'base_de_dados/hantavir.csv'
@@ -56,10 +56,15 @@ require(survival)
 plot(survfit(Surv(tempo,censura) ~ 1,
             data=dados))
 
-#vermelho:nao azul:sim
-plot(survfit(Surv(tempo,censura)~SANGRESREG,data=dados),col=c(2,4))
-plot(survfit(Surv(tempo,censura)~HIPOTENSAOREG,data=dados),col=c(2,4))
-plot(survfit(Surv(tempo,censura)~TONTURAREG,data=dados),col=c(2,4))
+# Curvas de sobrevivência para as variáveis: 
+# SANGRESREG
+# HIPOTENSAOREG
+# TONTURAREG
+# vermelho:nao azul:sim
+plot(survfit(Surv(tempo,censura) ~ SANGRESREG, data=dados), col = c(2,4))
+plot(survfit(Surv(tempo,censura) ~ HIPOTENSAOREG, data=dados),col = c(2,4))
+plot(survfit(Surv(tempo,censura) ~ TONTURAREG, data=dados),col = c(2,4))
+
 
 fit <- coxph(Surv(tempo,censura)~IDADE+SEXOREG+TONTURAREG+INSUFRENALREG+SANGRESREG+CEFALEIAREG+HIPOTENSAOREG+MIALGIASREG+SINAISHEMOREG+HEMMAIOR46REG+LEUCCDEREG+AUMENTOUREREG+DERPLEURALREG+INFPULDIFREG+EDEMAPULMREG,data=dados)
 summary(fit)
@@ -95,4 +100,5 @@ pd <- smcure(Surv(tempo,censura)~IDADE+SEXOREG+TONTURAREG+SANGRESREG+HIPOTENSAOR
 
 pd <- smcure(Surv(tempo,censura)~IDADE+SEXOREG+TONTURAREG+SANGRESREG+HIPOTENSAOREG,cureform=~IDADE+TONTURAREG+SANGRESREG+HIPOTENSAOREG,
             data=dados,model='ph',nboot=500)
+
 
