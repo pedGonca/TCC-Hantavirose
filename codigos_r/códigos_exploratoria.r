@@ -7,6 +7,8 @@
 library(tidyverse)
 library(survival)
 library(ggfortify)
+library(knitr)
+
 
 # Lendo os dados e analisando sua estrutura
 path <- 'base_de_dados/hantavir.csv'
@@ -52,36 +54,61 @@ dados$tempo[aux] <- as.numeric(as.Date(dados$DATAENCERR[aux],"%d/%m/%Y")-as.Date
 aux <- dados$tempo>100
 dados$tempo[aux]<- 80
 
-require(survival)
-plot(survfit(Surv(tempo,censura) ~ 1,
-            data=dados))
+
+# Alteradas e padronizadas todas as variáveis, temos:
+summary(dados)
+
+kable(table(dados$tempo))## Quanto maior o tempo, menos a quantidade de observações na variável
+kable(prop.table(table(dados$tempo))) ##
+
+
+ekm <- survfit(Surv(tempo,censura) ~ 1,
+            data=dados, type=c("kaplan-meier")) 
+summary(ekm) # IC EXTREMAMENTE espaçado
+plot(ekm) # Comportamento estranho explicado pela falta de observações
+
 
 # Curvas de sobrevivência para as variáveis: 
 # SANGRESREG
+ekm_SANGRESREG <- survfit(Surv(tempo,censura) ~ SANGRESREG, data=dados)
+summary(ekm_SANGRESREG)
+plot(ekm_SANGRESREG)
+
 # HIPOTENSAOREG
+ekm_HIPOTENSAOREG <- survfit(Surv(tempo,censura) ~ HIPOTENSAOREG, data=dados)
+summary(ekm_HIPOTENSAOREG)
+plot(ekm_HIPOTENSAOREG)
 # TONTURAREG
-# vermelho:nao azul:sim
-plot(survfit(Surv(tempo,censura) ~ SANGRESREG, data=dados), col = c(2,4))
-plot(survfit(Surv(tempo,censura) ~ HIPOTENSAOREG, data=dados),col = c(2,4))
-plot(survfit(Surv(tempo,censura) ~ TONTURAREG, data=dados),col = c(2,4))
+ekm_TONTURAREG <- survfit(Surv(tempo,censura) ~ TONTURAREG, data=dados)
+summary(ekm_TONTURAREG)
 
 
+
+# Seleção de Variáveis para o modelo de cox
 fit <- coxph(Surv(tempo,censura)~IDADE+SEXOREG+TONTURAREG+INSUFRENALREG+SANGRESREG+CEFALEIAREG+HIPOTENSAOREG+MIALGIASREG+SINAISHEMOREG+HEMMAIOR46REG+LEUCCDEREG+AUMENTOUREREG+DERPLEURALREG+INFPULDIFREG+EDEMAPULMREG,data=dados)
 summary(fit)
+
 fit <- coxph(Surv(tempo,censura)~IDADE+SEXOREG+TONTURAREG+INSUFRENALREG+SANGRESREG+CEFALEIAREG+HIPOTENSAOREG+MIALGIASREG+SINAISHEMOREG+HEMMAIOR46REG+LEUCCDEREG+AUMENTOUREREG+DERPLEURALREG+INFPULDIFREG,data=dados)
 summary(fit)
+
 fit <- coxph(Surv(tempo,censura)~IDADE+SEXOREG+TONTURAREG+INSUFRENALREG+SANGRESREG+CEFALEIAREG+HIPOTENSAOREG+MIALGIASREG+SINAISHEMOREG+HEMMAIOR46REG+AUMENTOUREREG+DERPLEURALREG+INFPULDIFREG,data=dados)
 summary(fit)
+
 fit <- coxph(Surv(tempo,censura)~IDADE+SEXOREG+TONTURAREG+SANGRESREG+CEFALEIAREG+HIPOTENSAOREG+MIALGIASREG+SINAISHEMOREG+HEMMAIOR46REG+AUMENTOUREREG+DERPLEURALREG+INFPULDIFREG,data=dados)
 summary(fit)
+
 fit <- coxph(Surv(tempo,censura)~IDADE+SEXOREG+TONTURAREG+SANGRESREG+HIPOTENSAOREG+MIALGIASREG+SINAISHEMOREG+HEMMAIOR46REG+AUMENTOUREREG+DERPLEURALREG+INFPULDIFREG,data=dados)
 summary(fit)
+
 fit <- coxph(Surv(tempo,censura)~IDADE+SEXOREG+TONTURAREG+SANGRESREG+HIPOTENSAOREG+MIALGIASREG+SINAISHEMOREG+HEMMAIOR46REG+AUMENTOUREREG+INFPULDIFREG,data=dados)
 summary(fit)
+
 fit <- coxph(Surv(tempo,censura)~IDADE+SEXOREG+TONTURAREG+SANGRESREG+HIPOTENSAOREG+SINAISHEMOREG+HEMMAIOR46REG+AUMENTOUREREG+INFPULDIFREG,data=dados)
 summary(fit)
+
 fit <- coxph(Surv(tempo,censura)~IDADE+SEXOREG+TONTURAREG+SANGRESREG+HIPOTENSAOREG+SINAISHEMOREG+HEMMAIOR46REG+AUMENTOUREREG,data=dados)
 summary(fit)
+
 fit <- coxph(Surv(tempo,censura)~IDADE+SEXOREG+TONTURAREG+SANGRESREG+HIPOTENSAOREG+HEMMAIOR46REG+AUMENTOUREREG,data=dados)
 summary(fit)
 
