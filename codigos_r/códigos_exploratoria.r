@@ -3,11 +3,15 @@
 # Códigos TCC
 ################################################
 
+rm(list = ls())
+
 # Pacotes
 library(tidyverse)
 library(survival)
+library(survminer)
 library(ggfortify)
 library(knitr)
+library(dplyr)
 
 
 # Lendo os dados e analisando sua estrutura
@@ -43,7 +47,6 @@ sum(aux)
 dados$tempo[aux] <- 1
 dados$censura = ifelse(dados$CASOCONTROLE == 1,1,0)
 
-summary(dados$tempo)
 
 par(mfrow = c(1,1))
 hist(dados$tempo)
@@ -65,22 +68,44 @@ kable(prop.table(table(dados$tempo))) ##
 ekm <- survfit(Surv(tempo,censura) ~ 1,
             data=dados, type=c("kaplan-meier")) 
 summary(ekm) # IC EXTREMAMENTE espaçado
-plot(ekm) # Comportamento estranho explicado pela falta de observações
+ggsurvplot(ekm) # Comportamento estranho explicado pela falta de observações
 
 
 # Curvas de sobrevivência para as variáveis: 
+unique(dados$IDADE)
+hist(dados$IDADE)
+# IDADE_CAT
+# Categorizando a idade. Será categorizado de 25 em 25 anos
+dados$IDADE_CAT <- ""
+dados$IDADE_CAT[dados$IDADE <= 25] <- '[0;25]'
+dados$IDADE_CAT[dados$IDADE > 25 & dados$IDADE <= 50] <- ']25;50]'
+dados$IDADE_CAT[dados$IDADE > 25 & dados$IDADE <= 50] <- ']25;50]'
+dados$IDADE_CAT[dados$IDADE > 50] <- '[50['
+
+
+ekm_IDADE_CAT <- survfit(Surv(tempo,censura) ~ IDADE_CAT, data=dados)
+summary(ekm_IDADE_CAT)
+ggsurvplot(ekm_IDADE_CAT)
+
+# SEXOREG
+ekm_SEXOREG <- survfit(Surv(tempo,censura) ~ SEXOREG, data=dados)
+summary(ekm_SEXOREG)
+ggsurvplot(ekm_SEXOREG)
+
 # SANGRESREG
 ekm_SANGRESREG <- survfit(Surv(tempo,censura) ~ SANGRESREG, data=dados)
 summary(ekm_SANGRESREG)
-plot(ekm_SANGRESREG)
+ggsurvplot(ekm_SANGRESREG)
 
 # HIPOTENSAOREG
 ekm_HIPOTENSAOREG <- survfit(Surv(tempo,censura) ~ HIPOTENSAOREG, data=dados)
 summary(ekm_HIPOTENSAOREG)
-plot(ekm_HIPOTENSAOREG)
+ggsurvplot(ekm_HIPOTENSAOREG)
+
 # TONTURAREG
 ekm_TONTURAREG <- survfit(Surv(tempo,censura) ~ TONTURAREG, data=dados)
 summary(ekm_TONTURAREG)
+ggsurvplot(ekm_TONTURAREG)
 
 
 
@@ -116,16 +141,28 @@ summary(fit)
 fit <- coxph(Surv(tempo,censura)~IDADE+SEXOREG+TONTURAREG+SANGRESREG+HIPOTENSAOREG+HEMMAIOR46REG,
             data=dados)
 summary(fit)
+
 fit <- coxph(Surv(tempo,censura)~IDADE+SEXOREG+TONTURAREG+SANGRESREG+HIPOTENSAOREG,
             data=dados)
 summary(fit)
 
 
-require(smcure)
-pd <- smcure(Surv(tempo,censura)~IDADE+SEXOREG+TONTURAREG+SANGRESREG+HIPOTENSAOREG,cureform=~IDADE+SEXOREG+TONTURAREG+SANGRESREG+HIPOTENSAOREG,
-            data=dados,model='ph',nboot=500)
+### Ajustando o modelos com o pacote smcure
 
-pd <- smcure(Surv(tempo,censura)~IDADE+SEXOREG+TONTURAREG+SANGRESREG+HIPOTENSAOREG,cureform=~IDADE+TONTURAREG+SANGRESREG+HIPOTENSAOREG,
-            data=dados,model='ph',nboot=500)
+dados2 <- dados[,c(151,152,21,14,51,62,82)]
+head(dados2)
+
+require(smcure)
+pd <- smcure(Surv(tempo,censura)~IDADE+SEXOREG+TONTURAREG+SANGRESREG+HIPOTENSAOREG,
+            cureform = ~IDADE+SEXOREG+TONTURAREG+SANGRESREG+HIPOTENSAOREG,
+            data = dados2, model = 'ph',nboot = 100)
+
+printsmcure(pd)
+
+pd <- smcure(Surv(tempo,censura)~IDADE+SEXOREG+TONTURAREG+SANGRESREG+HIPOTENSAOREG,
+            cureform=~IDADE+TONTURAREG+SANGRESREG+HIPOTENSAOREG,
+            data=dados, model = 'ph',nboot = 500)
+
+
 
 
