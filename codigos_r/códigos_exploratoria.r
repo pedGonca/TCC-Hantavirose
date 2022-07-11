@@ -12,7 +12,7 @@ library(survminer)
 library(ggfortify)
 library(knitr)
 library(dplyr)
-
+##install.packages('survminer')
 
 # Lendo os dados e analisando sua estrutura
 path <- 'base_de_dados/hantavir.csv'
@@ -113,44 +113,19 @@ ggsurvplot(ekm_TONTURAREG)
 fit <- coxph(Surv(tempo,censura)~IDADE+SEXOREG+TONTURAREG+INSUFRENALREG+SANGRESREG+CEFALEIAREG+HIPOTENSAOREG+MIALGIASREG+SINAISHEMOREG+HEMMAIOR46REG+LEUCCDEREG+AUMENTOUREREG+DERPLEURALREG+INFPULDIFREG+EDEMAPULMREG,data=dados)
 summary(fit)
 
-fit <- coxph(Surv(tempo,censura)~IDADE+SEXOREG+TONTURAREG+INSUFRENALREG+SANGRESREG+CEFALEIAREG+HIPOTENSAOREG+MIALGIASREG+SINAISHEMOREG+HEMMAIOR46REG+LEUCCDEREG+AUMENTOUREREG+DERPLEURALREG+INFPULDIFREG,data=dados)
-summary(fit)
-
-fit <- coxph(Surv(tempo,censura)~IDADE+SEXOREG+TONTURAREG+INSUFRENALREG+SANGRESREG+CEFALEIAREG+HIPOTENSAOREG+MIALGIASREG+SINAISHEMOREG+HEMMAIOR46REG+AUMENTOUREREG+DERPLEURALREG+INFPULDIFREG,data=dados)
-summary(fit)
-
-fit <- coxph(Surv(tempo,censura)~IDADE+SEXOREG+TONTURAREG+SANGRESREG+CEFALEIAREG+HIPOTENSAOREG+MIALGIASREG+SINAISHEMOREG+HEMMAIOR46REG+AUMENTOUREREG+DERPLEURALREG+INFPULDIFREG,data=dados)
-summary(fit)
-
-fit <- coxph(Surv(tempo,censura)~IDADE+SEXOREG+TONTURAREG+SANGRESREG+HIPOTENSAOREG+MIALGIASREG+SINAISHEMOREG+HEMMAIOR46REG+AUMENTOUREREG+DERPLEURALREG+INFPULDIFREG,data=dados)
-summary(fit)
-
-fit <- coxph(Surv(tempo,censura)~IDADE+SEXOREG+TONTURAREG+SANGRESREG+HIPOTENSAOREG+MIALGIASREG+SINAISHEMOREG+HEMMAIOR46REG+AUMENTOUREREG+INFPULDIFREG,data=dados)
-summary(fit)
-
-fit <- coxph(Surv(tempo,censura)~IDADE+SEXOREG+TONTURAREG+SANGRESREG+HIPOTENSAOREG+SINAISHEMOREG+HEMMAIOR46REG+AUMENTOUREREG+INFPULDIFREG,data=dados)
-summary(fit)
-
-fit <- coxph(Surv(tempo,censura)~IDADE+SEXOREG+TONTURAREG+SANGRESREG+HIPOTENSAOREG+SINAISHEMOREG+HEMMAIOR46REG+AUMENTOUREREG,data=dados)
-summary(fit)
-
-fit <- coxph(Surv(tempo,censura)~IDADE+SEXOREG+TONTURAREG+SANGRESREG+HIPOTENSAOREG+HEMMAIOR46REG+AUMENTOUREREG,data=dados)
-summary(fit)
-
-#AUMENTOUREREG tem 109 dados omissos
-fit <- coxph(Surv(tempo,censura)~IDADE+SEXOREG+TONTURAREG+SANGRESREG+HIPOTENSAOREG+HEMMAIOR46REG,
-            data=dados)
-summary(fit)
+## Testei os modelos retirando as não significativas e não relevantes para o estudo
 
 fit <- coxph(Surv(tempo,censura)~IDADE+SEXOREG+TONTURAREG+SANGRESREG+HIPOTENSAOREG,
             data=dados)
-summary(fit)
+summary(fit) # Tentei rodar com a idade categórica, mas o resultado foi menos satisfatório
 
 
 ### Ajustando o modelos com o pacote smcure
-
+# dados2 contém as variáveis IDADE, SEXOREG, TONTURAREG, SANGRESREG e HIPOTENSAOREG
 dados2 <- dados[,c(151,152,21,14,51,62,82)]
 head(dados2)
+str(dados2)
+
 
 require(smcure)
 pd <- smcure(Surv(tempo,censura)~IDADE+SEXOREG+TONTURAREG+SANGRESREG+HIPOTENSAOREG,
@@ -162,7 +137,3 @@ printsmcure(pd)
 pd <- smcure(Surv(tempo,censura)~IDADE+SEXOREG+TONTURAREG+SANGRESREG+HIPOTENSAOREG,
             cureform=~IDADE+TONTURAREG+SANGRESREG+HIPOTENSAOREG,
             data=dados, model = 'ph',nboot = 500)
-
-
-
-
