@@ -12,20 +12,26 @@ library(survminer)
 library(ggfortify)
 library(knitr)
 
-##install.packages('survminer')
 
 # Lendo os dados e analisando sua estrutura
-path <- 'base_de_dados/hantavir.csv'
+path <- 'base_de_dados/hantavir2.csv'
 dados <- read.csv(path, 
     header = TRUE, sep = ';')
 summary(dados)
 str(dados)
 
 
+# Criando a variável de censura
+# 0 para censura e 1 para os pacientes com data de óbito registrada
+dados$censura = ifelse(dados$CASOCONTROLE == 1,1,0)
 
+# Criando a variável tempo
+
+# Data de óbito menos o tempo do primeiro sintoma apresentado para casos onde houve óbito
 tempo <- as.numeric(as.Date(dados$DATAOBITO,"%d/%m/%Y")-as.Date(dados$DATA1SINT,"%d/%m/%Y"))
-aux=dados$CASOCONTROLE==2
+aux = dados$CASOCONTROLE==2
 
+# Data de alta do paciente menos o tempo do primeiro sintoma apresentado para casos onde não houve óbito
 tempo[aux] <- as.numeric(as.Date(dados$DATAALTA[aux],"%d/%m/%Y")-as.Date(dados$DATA1SINT[aux],"%d/%m/%Y"))
 
 dados$tempo <- tempo
@@ -45,9 +51,8 @@ dados$tempo[aux] <- as.numeric(as.Date(dados$DATAENCERR[aux],"%d/%m/%Y")-as.Date
 aux <- dados$tempo == 0
 sum(aux)
 dados$tempo[aux] <- 1
-dados$censura = ifelse(dados$CASOCONTROLE == 1,1,0)
 
-
+# Histograma da variável tempo
 par(mfrow = c(1,1))
 hist(dados$tempo)
 
@@ -56,7 +61,7 @@ dados$tempo[aux] <- as.numeric(as.Date(dados$DATAENCERR[aux],"%d/%m/%Y")-as.Date
 
 aux <- dados$tempo>100
 dados$tempo[aux]<- 80
-
+dados$tempo <- dados$tempo[dados$tempo > 0]
 
 # Alteradas e padronizadas todas as variáveis, temos:
 summary(dados)
@@ -91,6 +96,8 @@ ggsurvplot(ekm_IDADE_CAT)
 ekm_SEXOREG <- survfit(Surv(tempo,censura) ~ SEXOREG, data=dados)
 summary(ekm_SEXOREG)
 ggsurvplot(ekm_SEXOREG)
+table(dados$SEXOREG)
+mean(dados$tempo[dados$SEXOREG == 1])
 
 # SANGRESREG
 ekm_SANGRESREG <- survfit(Surv(tempo,censura) ~ SANGRESREG, data=dados)
@@ -110,7 +117,9 @@ ggsurvplot(ekm_TONTURAREG)
 
 
 # Seleção de Variáveis para o modelo de cox
-fit <- coxph(Surv(tempo,censura)~IDADE+SEXOREG+TONTURAREG+INSUFRENALREG+SANGRESREG+CEFALEIAREG+HIPOTENSAOREG+MIALGIASREG+SINAISHEMOREG+HEMMAIOR46REG+LEUCCDEREG+AUMENTOUREREG+DERPLEURALREG+INFPULDIFREG+EDEMAPULMREG,data=dados)
+fit <- coxph(Surv(tempo,censura)~IDADE + SEXOREG + TONTURAREG + INSUFRENALREG + SANGRESREG + CEFALEIAREG + HIPOTENSAOREG + MIALGIASREG +
+            SINAISHEMOREG+HEMMAIOR46REG + LEUCCDEREG + AUMENTOUREREG + DERPLEURALREG + INFPULDIFREG + EDEMAPULMREG + 
+            ZONALOCINF, data = dados)
 summary(fit)
 
 ## Testei os modelos retirando as não significativas e não relevantes para o estudo
@@ -170,6 +179,7 @@ pd_ph <- smcure(Surv(tempo,censura)~IDADE+SEXOREG+TONTURAREG+SANGRESREG,
             data = dados2, model = 'ph', nboot = 200)
 
 printsmcure(pd_ph)
+
 
 
 ## Plotar as curvas
@@ -235,93 +245,6 @@ plotpredictsmcure(predf_ph, model='ph')
 
 # Resultados estranho para idade maior de 40 anos 
 
-### Ajustando o modelos com o pacote smcure
-# dados3 contém as variáveis IDADE, SEXOREG, TONTURAREG, SANGRESREG e HIPOTENSAOREG porém com idade <=40
-
-dados3 <- dados[,c(151,152,21,14,51,62,82)]
-
-dados3$tempo <- as.integer(dados3$tempo)
-dados3$censura <- as.integer(dados3$censura)
-
-dados3 <- filter(dados3, IDADE <= 50)
-
-# Caiu de 280 para 248
-str(dados3)
-
-
-pd_idade2 <- smcure(Surv(tempo,censura)~IDADE,
-            cureform = ~IDADE,
-            data = dados3, model = 'ph', nboot = 200)
-printsmcure(pd_idade2)
-
-pd_SEXOREG2 <- smcure(Surv(tempo,censura)~SEXOREG,
-            cureform = ~SEXOREG,
-            data = dados3, model = 'ph', nboot = 200)
-printsmcure(pd_SEXOREG2)
-
-pd_TONTURAREG2 <- smcure(Surv(tempo,censura)~TONTURAREG,
-            cureform = ~TONTURAREG,
-            data = dados3, model = 'ph', nboot = 200)
-printsmcure(pd_TONTURAREG2)
-
-pd_SANGRESREG2 <- smcure(Surv(tempo,censura)~SANGRESREG,
-            cureform = ~SANGRESREG,
-            data = dados3, model = 'ph', nboot = 200)
-printsmcure(pd_SANGRESREG2)
-
-
-pd_ph2 <- smcure(Surv(tempo,censura)~IDADE+SEXOREG+TONTURAREG+SANGRESREG,
-            cureform = ~IDADE+SEXOREG+TONTURAREG+SANGRESREG,
-            data = dados3, model = 'ph', nboot = 200)
-
-printsmcure(pd_ph2)
-
-
-## Plotar as curvas
-
-par(mfrow = c(1,1))
-
-predf_idade2 = predictsmcure(pd_idade2, newX = c(33,33),
-    newZ = c(33,33), model = 'ph')
-plotpredictsmcure(predf_idade2, model='ph')
-
-
-predf_SEXOREG2 = predictsmcure(pd_SEXOREG2, newX = c(0,1),
-    newZ = c(0,1), model = 'ph')
-plotpredictsmcure(predf_SEXOREG2, model='ph')
-
-
-predf_SEXOREG2 = predictsmcure(pd_SEXOREG2, newX = c(1,0),
-    newZ = c(0,1), model = 'ph')
-plotpredictsmcure(predf_SEXOREG2, model='ph')
-
-
-predf_TONTURAREG2 = predictsmcure(pd_TONTURAREG2, newX = c(0,1),
-    newZ = c(0,1), model = 'ph')
-plotpredictsmcure(predf_TONTURAREG2, model='ph')
-
-
-predf_SANGRESREG2 = predictsmcure(pd_SANGRESREG2, newX = c(0,1),
-    newZ = c(0,1), model = 'ph')
-plotpredictsmcure(predf_SANGRESREG2, model='ph')
-
-
-predf_ph2 = predictsmcure(pd_ph, newX = cbind(c(33,33),c(0,1),c(0,1),c(0,1)),
-    newZ = cbind(c(33,33),c(0,1),c(0,1),c(0,1)), model = 'ph')
-plotpredictsmcure(predf_ph2, model='ph')
-
-
-par(mfrow = c(2,2))
-plotpredictsmcure(predf_idade, model='ph', type = 'S')
-plotpredictsmcure(predf_SEXOREG, model='ph')
-plotpredictsmcure(predf_TONTURAREG, model='ph')
-plotpredictsmcure(predf_SANGRESREG, model='ph')
-
-par(mfrow = c(1,1))
-plotpredictsmcure(predf_ph, model='ph')
-
-
-
 
 
 
@@ -346,7 +269,7 @@ smcure(formula = Surv(Time, Status) ~ TRT, cureform = ~TRT, data = bmt,
 
 printsmcure(pd_aft)
 
-
+help(smsurv)
 
 
 
