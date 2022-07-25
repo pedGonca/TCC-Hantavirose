@@ -11,7 +11,7 @@ library(survival)
 library(survminer)
 library(ggfortify)
 library(knitr)
-library(dplyr)
+
 ##install.packages('survminer')
 
 # Lendo os dados e analisando sua estrutura
@@ -61,7 +61,7 @@ dados$tempo[aux]<- 80
 # Alteradas e padronizadas todas as variáveis, temos:
 summary(dados)
 
-kable(table(dados$tempo))## Quanto maior o tempo, menos a quantidade de observações na variável
+kable(table(dados$tempo))## Quanto maior o tempo, menor a quantidade de observações na variável
 kable(prop.table(table(dados$tempo))) ##
 
 
@@ -123,17 +123,237 @@ summary(fit) # Tentei rodar com a idade categórica, mas o resultado foi menos s
 ### Ajustando o modelos com o pacote smcure
 # dados2 contém as variáveis IDADE, SEXOREG, TONTURAREG, SANGRESREG e HIPOTENSAOREG
 dados2 <- dados[,c(151,152,21,14,51,62,82)]
+
+dados2$tempo <- as.integer(dados2$tempo)
+dados2$censura <- as.integer(dados2$censura)
+str(dados2)
+
+
+dados2 <- dados2 %>% mutate_at(c("SEXOREG", "TONTURAREG", "SANGRESREG", "HIPOTENSAOREG"), as.logical)
+
 head(dados2)
 str(dados2)
 
 
+# Modelo de COX com os dados2
+fit <- coxph(Surv(tempo,censura)~IDADE+SEXOREG+TONTURAREG+SANGRESREG+HIPOTENSAOREG,
+            data=dados2)
+summary(fit)
+
+
 require(smcure)
-pd <- smcure(Surv(tempo,censura)~IDADE+SEXOREG+TONTURAREG+SANGRESREG+HIPOTENSAOREG,
-            cureform = ~IDADE+SEXOREG+TONTURAREG+SANGRESREG+HIPOTENSAOREG,
-            data = dados2, model = 'ph',nboot = 100)
+# Deixar sempre a idade e o sexo e testar as variáveis uma a uma
 
-printsmcure(pd)
+pd_idade <- smcure(Surv(tempo,censura)~IDADE,
+            cureform = ~IDADE,
+            data = dados2, model = 'ph', nboot = 200)
+printsmcure(pd_idade)
 
-pd <- smcure(Surv(tempo,censura)~IDADE+SEXOREG+TONTURAREG+SANGRESREG+HIPOTENSAOREG,
-            cureform=~IDADE+TONTURAREG+SANGRESREG+HIPOTENSAOREG,
-            data=dados, model = 'ph',nboot = 500)
+pd_SEXOREG <- smcure(Surv(tempo,censura)~SEXOREG,
+            cureform = ~SEXOREG,
+            data = dados2, model = 'ph', nboot = 200)
+printsmcure(pd_SEXOREG)
+
+pd_TONTURAREG <- smcure(Surv(tempo,censura)~TONTURAREG,
+            cureform = ~TONTURAREG,
+            data = dados2, model = 'ph', nboot = 200)
+printsmcure(pd_TONTURAREG)
+
+pd_SANGRESREG <- smcure(Surv(tempo,censura)~SANGRESREG,
+            cureform = ~SANGRESREG,
+            data = dados2, model = 'ph', nboot = 200)
+printsmcure(pd_SANGRESREG)
+
+
+pd_ph <- smcure(Surv(tempo,censura)~IDADE+SEXOREG+TONTURAREG+SANGRESREG,
+            cureform = ~IDADE+SEXOREG+TONTURAREG+SANGRESREG,
+            data = dados2, model = 'ph', nboot = 200)
+
+printsmcure(pd_ph)
+
+
+## Plotar as curvas
+# Exemplo do pacote
+
+## Utilizou o cbind para comtemplar todas as variáveis do ajuste
+
+# predf = predictsmcure(pd, newX = cbind(c(1,0),c(0,0),c(0.579,0.579)),
+#     newZ = cbind(c(1,0),c(0,0),c(0.579,0.579)), model = 'ph')
+# plotpredictsmcure(predf, model='ph')
+
+# predf=predictsmcure(pd,newX = cbind(c(1,0),c(1,1),c(0.579,0.579)),
+#     newZ=cbind(c(1,0),c(1,1),c(0.579,0.579)),model=“ph”)
+# plotpredictsmcure(predf,model=“ph”)
+
+par(mfrow = c(1,1))
+
+median(dados2$IDADE)
+predf_idade = predictsmcure(pd_idade, newX = c(33,33),
+    newZ = c(33,33), model = 'ph')
+plotpredictsmcure(predf_idade, model='ph')
+
+
+predf_SEXOREG = predictsmcure(pd_SEXOREG, newX = c(0,1),
+    newZ = c(0,1), model = 'ph')
+plotpredictsmcure(predf_SEXOREG, model='ph')
+
+
+predf_SEXOREG = predictsmcure(pd_SEXOREG, newX = c(1,0),
+    newZ = c(0,1), model = 'ph')
+plotpredictsmcure(predf_SEXOREG, model='ph')
+
+
+predf_TONTURAREG = predictsmcure(pd_TONTURAREG, newX = c(0,1),
+    newZ = c(0,1), model = 'ph')
+plotpredictsmcure(predf_TONTURAREG, model='ph')
+
+
+predf_SANGRESREG = predictsmcure(pd_SANGRESREG, newX = c(0,1),
+    newZ = c(0,1), model = 'ph')
+plotpredictsmcure(predf_SANGRESREG, model='ph')
+
+
+predf_ph = predictsmcure(pd_ph, newX = cbind(c(33,33),c(0,0),c(0,1),c(0,1)),
+    newZ = cbind(c(33,33),c(0,0),c(0,1),c(0,1)), model = 'ph')
+plotpredictsmcure(predf_ph, model='ph')
+
+
+predf_ph = predictsmcure(pd_ph, newX = cbind(c(33,33),c(1,1),c(0,1),c(0,1)),
+    newZ = cbind(c(33,33),c(1,1),c(0,1),c(0,1)), model = 'ph')
+plotpredictsmcure(predf_ph, model='ph')
+
+
+
+par(mfrow = c(2,2))
+plotpredictsmcure(predf_idade, model='ph', type = 'S')
+plotpredictsmcure(predf_SEXOREG, model='ph')
+plotpredictsmcure(predf_TONTURAREG, model='ph')
+plotpredictsmcure(predf_SANGRESREG, model='ph')
+
+par(mfrow = c(1,1))
+plotpredictsmcure(predf_ph, model='ph')
+
+# Resultados estranho para idade maior de 40 anos 
+
+### Ajustando o modelos com o pacote smcure
+# dados3 contém as variáveis IDADE, SEXOREG, TONTURAREG, SANGRESREG e HIPOTENSAOREG porém com idade <=40
+
+dados3 <- dados[,c(151,152,21,14,51,62,82)]
+
+dados3$tempo <- as.integer(dados3$tempo)
+dados3$censura <- as.integer(dados3$censura)
+
+dados3 <- filter(dados3, IDADE <= 50)
+
+# Caiu de 280 para 248
+str(dados3)
+
+
+pd_idade2 <- smcure(Surv(tempo,censura)~IDADE,
+            cureform = ~IDADE,
+            data = dados3, model = 'ph', nboot = 200)
+printsmcure(pd_idade2)
+
+pd_SEXOREG2 <- smcure(Surv(tempo,censura)~SEXOREG,
+            cureform = ~SEXOREG,
+            data = dados3, model = 'ph', nboot = 200)
+printsmcure(pd_SEXOREG2)
+
+pd_TONTURAREG2 <- smcure(Surv(tempo,censura)~TONTURAREG,
+            cureform = ~TONTURAREG,
+            data = dados3, model = 'ph', nboot = 200)
+printsmcure(pd_TONTURAREG2)
+
+pd_SANGRESREG2 <- smcure(Surv(tempo,censura)~SANGRESREG,
+            cureform = ~SANGRESREG,
+            data = dados3, model = 'ph', nboot = 200)
+printsmcure(pd_SANGRESREG2)
+
+
+pd_ph2 <- smcure(Surv(tempo,censura)~IDADE+SEXOREG+TONTURAREG+SANGRESREG,
+            cureform = ~IDADE+SEXOREG+TONTURAREG+SANGRESREG,
+            data = dados3, model = 'ph', nboot = 200)
+
+printsmcure(pd_ph2)
+
+
+## Plotar as curvas
+
+par(mfrow = c(1,1))
+
+predf_idade2 = predictsmcure(pd_idade2, newX = c(33,33),
+    newZ = c(33,33), model = 'ph')
+plotpredictsmcure(predf_idade2, model='ph')
+
+
+predf_SEXOREG2 = predictsmcure(pd_SEXOREG2, newX = c(0,1),
+    newZ = c(0,1), model = 'ph')
+plotpredictsmcure(predf_SEXOREG2, model='ph')
+
+
+predf_SEXOREG2 = predictsmcure(pd_SEXOREG2, newX = c(1,0),
+    newZ = c(0,1), model = 'ph')
+plotpredictsmcure(predf_SEXOREG2, model='ph')
+
+
+predf_TONTURAREG2 = predictsmcure(pd_TONTURAREG2, newX = c(0,1),
+    newZ = c(0,1), model = 'ph')
+plotpredictsmcure(predf_TONTURAREG2, model='ph')
+
+
+predf_SANGRESREG2 = predictsmcure(pd_SANGRESREG2, newX = c(0,1),
+    newZ = c(0,1), model = 'ph')
+plotpredictsmcure(predf_SANGRESREG2, model='ph')
+
+
+predf_ph2 = predictsmcure(pd_ph, newX = cbind(c(33,33),c(0,1),c(0,1),c(0,1)),
+    newZ = cbind(c(33,33),c(0,1),c(0,1),c(0,1)), model = 'ph')
+plotpredictsmcure(predf_ph2, model='ph')
+
+
+par(mfrow = c(2,2))
+plotpredictsmcure(predf_idade, model='ph', type = 'S')
+plotpredictsmcure(predf_SEXOREG, model='ph')
+plotpredictsmcure(predf_TONTURAREG, model='ph')
+plotpredictsmcure(predf_SANGRESREG, model='ph')
+
+par(mfrow = c(1,1))
+plotpredictsmcure(predf_ph, model='ph')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Tempo de falha acelerado
+
+pd_aft <- smcure(Surv(tempo,censura)~IDADE,
+            cureform = ~IDADE,
+            data = dados3, model = 'aft', nboot = 200)
+
+
+smcure(formula = Surv(Time, Status) ~ TRT, cureform = ~TRT, data = bmt,
+   model = 'aft', nboot = 200)
+
+
+printsmcure(pd_aft)
+
+
+
+
+
+## Kaplan meyer do sex M e F
+## Pegar um sub grupo dos meus dados, e testar um kaplan meyer
+
+## Comparar os mundos perfeitos e não perfeitos
+
+## Sexos M e F com sang 0 e tont 0
+## Sexos M e F com sang 1 e tont 1
