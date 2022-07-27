@@ -86,15 +86,10 @@ ekm_TONTURAREG <- survfit(Surv(tempo,censura) ~ TONTURAREG, data=dados)
 summary(ekm_TONTURAREG)
 ggsurvplot(ekm_TONTURAREG)
 
-# ZONALOCINF
-ekm_ZONALOCINF <- survfit(Surv(tempo,censura) ~ ZONALOCINF, data=dados)
-summary(ekm_ZONALOCINF)
-ggsurvplot(ekm_ZONALOCINF)
-unique(dados$ZONALOCALINF)
 
 # Seleção de Variáveis para o modelo de cox
 fit <- coxph(Surv(tempo,censura)~IDADE + SEXOREG + TONTURAREG + INSUFRENALREG + SANGRESREG + CEFALEIAREG + HIPOTENSAOREG + MIALGIASREG +
-            SINAISHEMOREG+HEMMAIOR46REG + LEUCCDEREG + AUMENTOUREREG + DERPLEURALREG + INFPULDIFREG + EDEMAPULMREG + 
+            SINAISHEMOREG + HEMMAIOR46REG + LEUCCDEREG + AUMENTOUREREG + DERPLEURALREG + INFPULDIFREG + EDEMAPULMREG + 
             ZONALOCINF, data = dados)
 summary(fit)
 
@@ -107,8 +102,9 @@ summary(fit) # Tentei rodar com a idade categórica, mas o resultado foi menos s
 
 ### Ajustando o modelos com o pacote smcure
 # dados2 contém as variáveis IDADE, SEXOREG, TONTURAREG, SANGRESREG, HIPOTENSAOREG e MIALGIASREG
-dados2 <- dados[,c(152,1,18,25,55,66,86,89)]
+dados2 <- dados[,c('tempo', 'censura','IDADE', 'SEXOREG', 'TONTURAREG', 'SANGRESREG', 'HIPOTENSAOREG', 'MIALGIASREG')]
 colnames(dados2)
+
 
 dados2$tempo <- as.integer(dados2$tempo)
 dados2$censura <- as.integer(dados2$censura)
@@ -139,33 +135,63 @@ pd_SEXOREG <- smcure(Surv(tempo,censura)~SEXOREG,
             data = dados2, model = 'ph', nboot = 200)
 printsmcure(pd_SEXOREG)
 
+
 pd_TONTURAREG <- smcure(Surv(tempo,censura)~TONTURAREG,
             cureform = ~TONTURAREG,
             data = dados2, model = 'ph', nboot = 200)
 printsmcure(pd_TONTURAREG)
+
 
 pd_SANGRESREG <- smcure(Surv(tempo,censura)~SANGRESREG,
             cureform = ~SANGRESREG,
             data = dados2, model = 'ph', nboot = 200)
 printsmcure(pd_SANGRESREG)
 
+
 pd_HIPOTENSAOREG <- smcure(Surv(tempo,censura)~HIPOTENSAOREG,
             cureform = ~HIPOTENSAOREG,
             data = dados2, model = 'ph', nboot = 200)
 printsmcure(pd_HIPOTENSAOREG)
 
+
 pd_MIALGIASREG <- smcure(Surv(tempo,censura)~MIALGIASREG,
-            cureform = ~HIPOTENSAOREG,
+            cureform = ~MIALGIASREG,
             data = dados2, model = 'ph', nboot = 200)
 printsmcure(pd_MIALGIASREG)
+
+
+pd_ph_hipotensao <- smcure(Surv(tempo,censura)~IDADE+SEXOREG+TONTURAREG+SANGRESREG+MIALGIASREG+HIPOTENSAOREG,
+            cureform = ~ IDADE+SEXOREG+TONTURAREG+SANGRESREG+MIALGIASREG,
+            data = dados2, model = 'ph', nboot = 300)
+printsmcure(pd_ph_hipotensao)
 
 
 pd_ph <- smcure(Surv(tempo,censura)~IDADE+SEXOREG+TONTURAREG+SANGRESREG+MIALGIASREG,
             cureform = ~ IDADE+SEXOREG+TONTURAREG+SANGRESREG+MIALGIASREG,
             data = dados2, model = 'ph', nboot = 300)
+printsmcure(pd_ph)            
 
-printsmcure(pd_ph)
 
+pd_ph <- smcure(Surv(tempo,censura)~IDADE+SEXOREG+TONTURAREG+SANGRESREG+HIPOTENSAOREG,
+            cureform = ~ IDADE+SEXOREG+TONTURAREG+SANGRESREG,
+            data = dados2, model = 'ph', nboot = 300)
+printsmcure(pd_ph)   
+
+
+pd_teste <- smcure(Surv(tempo,censura) ~ SANGRESREG+MIALGIASREG,
+            cureform = ~ IDADE+SANGRESREG+MIALGIASREG,
+            data = dados2, model = 'ph', nboot = 300)
+printsmcure(pd_teste)
+
+# Sangramento e tontura estão confundindo o modelo
+# Possivelmente colineares
+
+table(dados2$SANGRESREG, dados2$TONTURAREG)
+chisq.test(table(dados2$SANGRESREG, dados2$TONTURAREG))
+fisher.test(table(dados2$SANGRESREG, dados2$TONTURAREG))
+
+chisq.test(table(dados2$SANGRESREG, dados2$MIALGIASREG))
+fisher.test(table(dados2$SANGRESREG, dados2$MIALGIASREG))
 
 
 ## Plotar as curvas
@@ -194,11 +220,6 @@ predf_SEXOREG = predictsmcure(pd_SEXOREG, newX = c(0,1),
 plotpredictsmcure(predf_SEXOREG, model='ph')
 
 
-predf_SEXOREG = predictsmcure(pd_SEXOREG, newX = c(1,0),
-    newZ = c(0,1), model = 'ph')
-plotpredictsmcure(predf_SEXOREG, model='ph')
-
-
 predf_TONTURAREG = predictsmcure(pd_TONTURAREG, newX = c(0,1),
     newZ = c(0,1), model = 'ph')
 plotpredictsmcure(predf_TONTURAREG, model='ph')
@@ -209,41 +230,91 @@ predf_SANGRESREG = predictsmcure(pd_SANGRESREG, newX = c(0,1),
 plotpredictsmcure(predf_SANGRESREG, model='ph')
 
 
-predf_HIPOTENSAOREG = predictsmcure(pd_HIPOTENSAOREG, newX = c(0,1),
-    newZ = c(0,1), model = 'ph')
-plotpredictsmcure(predf_HIPOTENSAOREG, model='ph')
-
-
 predf_MIALGIASREG = predictsmcure(pd_MIALGIASREG, newX = c(0,1),
     newZ = c(0,1), model = 'ph')
 plotpredictsmcure(predf_MIALGIASREG, model='ph')
 
 
 
-predf_ph = predictsmcure(pd_ph, newX = cbind(c(33,33),c(0,0),c(0,1),c(0,1)),
-    newZ = cbind(c(33,33),c(0,0),c(0,1),c(0,1)), model = 'ph')
+predf_ph = predictsmcure(pd_ph, newX = cbind(c(33,33),c(0,0),c(0,1),c(0,1),c(0,1)),
+    newZ = cbind(c(33,33),c(0,0),c(0,1),c(0,1),c(0,1)), model = 'ph')
 plotpredictsmcure(predf_ph, model='ph')
 
 
-predf_ph = predictsmcure(pd_ph, newX = cbind(c(33,33),c(1,1),c(0,1),c(0,1)),
-    newZ = cbind(c(33,33),c(1,1),c(0,1),c(0,1)), model = 'ph')
+predf_ph = predictsmcure(pd_ph, newX = cbind(c(33,33),c(1,1),c(0,1),c(0,1),c(0,1)),
+    newZ = cbind(c(33,33),c(1,1),c(0,1),c(0,1),c(0,1)), model = 'ph')
 plotpredictsmcure(predf_ph, model='ph')
 
 
 
-par(mfrow = c(2,2))
-plotpredictsmcure(predf_idade, model='ph', type = 'S')
+
+par(mfrow = c(3,2))
+plotpredictsmcure(predf_idade, model='ph')
 plotpredictsmcure(predf_SEXOREG, model='ph')
 plotpredictsmcure(predf_TONTURAREG, model='ph')
 plotpredictsmcure(predf_SANGRESREG, model='ph')
+plotpredictsmcure(predf_MIALGIASREG, model='ph')
+
 
 par(mfrow = c(1,1))
 plotpredictsmcure(predf_ph, model='ph')
 
-# Resultados estranho para idade maior de 40 anos 
+
+## Kaplan meyer do sex M e F
+## Pegar um sub grupo dos meus dados, e testar um kaplan meyer
+
+## Comparar os mundos perfeitos e não perfeitos
+
+## Sexos M e F com sang 0 e tont 0
+## Sexos M e F com sang 1 e tont 1
+
+
+dados3 <- dados[,c('tempo', 'censura','IDADE', 'SEXOREG', 'TONTURAREG', 'SANGRESREG', 'HIPOTENSAOREG', 'MIALGIASREG')]
+
+dadosMasc <- filter(dados3, SEXOREG == 0)
+dadosFem <- filter(dados3, SEXOREG == 1)
+
+
+ekm_dadosMasc <- survfit(Surv(tempo,censura) ~ SEXOREG, data = dadosMasc)
+summary(ekm_dadosMasc)
+ggsurvplot(ekm_dadosMasc, linetype = 1, xlab = 'Tempo', ylab = 'Probabilidade de sobrevivência')
+
+ekm_dadosFem <- survfit(Surv(tempo,censura) ~ SEXOREG, data = dadosFem)
+summary(ekm_dadosFem)
+ggsurvplot(ekm_dadosFem, linetype = 1, xlab = 'Tempo', ylab = 'Probabilidade de sobrevivência')
+
+
+par(mfrow = c(1,1))
+
+par(mfrow = c(2,2))
+predf_ph1 = predictsmcure(pd_ph, newX = cbind(c(33,33),c(0,0),c(0,0),c(0,0),c(0,0)),
+    newZ = cbind(c(33,33),c(0,0),c(0,0),c(0,0),c(0,0)), model = 'ph')
+plotpredictsmcure(predf_ph1, model='ph')
+
+predf_ph2 = predictsmcure(pd_ph, newX = cbind(c(33,33),c(1,1),c(0,0),c(0,0),c(0,0)),
+    newZ = cbind(c(33,33),c(1,1),c(0,0),c(0,0),c(0,0)), model = 'ph')
+plotpredictsmcure(predf_ph2, model='ph')
+
+predf_ph3 = predictsmcure(pd_ph, newX = cbind(c(33,33),c(0,0),c(1,1),c(1,1),c(1,1)),
+    newZ = cbind(c(33,33),c(0,0),c(1,1),c(1,1),c(1,1)), model = 'ph')
+plotpredictsmcure(predf_ph3, model='ph')
+
+predf_ph4 = predictsmcure(pd_ph, newX = cbind(c(33,33),c(1,1),c(1,1),c(1,1),c(1,1)),
+    newZ = cbind(c(33,33),c(1,1),c(1,1),c(1,1),c(1,1)), model = 'ph')
+plotpredictsmcure(predf_ph4, model='ph')
+
+ggsurvplot(ekm_dadosFem, linetype = 1, xlab = 'Tempo', ylab = 'Probabilidade de sobrevivência')
 
 
 
+
+
+predf_ph4 = predictsmcure(pd_ph, newX = cbind(c(33,33),c(0,1),c(0,1),c(0,1),c(0,1)),
+    newZ = cbind(c(33,33),c(1,0),c(1,0),c(1,0),c(1,0)), model = 'ph')
+plotpredictsmcure(predf_ph4, model='ph')
+
+
+table(dados2$SEXOREG)
 
 
 
@@ -257,7 +328,7 @@ plotpredictsmcure(predf_ph, model='ph')
 
 pd_aft <- smcure(Surv(tempo,censura)~IDADE,
             cureform = ~IDADE,
-            data = dados3, model = 'aft', nboot = 200)
+            data = dados2, model = 'aft', nboot = 200)
 
 
 smcure(formula = Surv(Time, Status) ~ TRT, cureform = ~TRT, data = bmt,
@@ -270,10 +341,9 @@ help(smsurv)
 
 
 
-## Kaplan meyer do sex M e F
-## Pegar um sub grupo dos meus dados, e testar um kaplan meyer
 
-## Comparar os mundos perfeitos e não perfeitos
+help(bmt)
+dados <- data(e1684)
+summary(dados)
 
-## Sexos M e F com sang 0 e tont 0
-## Sexos M e F com sang 1 e tont 1
+1 - exp(1.007354+0.427327)/(1+exp(1.007354+0.427327))
