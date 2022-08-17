@@ -19,7 +19,9 @@ dados <- read.csv(path,
     header = TRUE, sep = ';')
 summary(dados)
 str(dados)
+colnames(dados)
 
+unique(dados$RSRESREG)
 
 # Criando a variável de censura
 # 0 para censura e 1 para os pacientes com data de óbito registrada
@@ -89,21 +91,25 @@ ggsurvplot(ekm_TONTURAREG)
 
 # Seleção de Variáveis para o modelo de cox
 fit <- coxph(Surv(tempo,censura)~IDADE + SEXOREG + TONTURAREG + INSUFRENALREG + SANGRESREG + CEFALEIAREG + HIPOTENSAOREG + MIALGIASREG +
-            SINAISHEMOREG + HEMMAIOR46REG + LEUCCDEREG + AUMENTOUREREG + DERPLEURALREG + INFPULDIFREG + EDEMAPULMREG + 
+            SINAISHEMOREG + HEMMAIOR46REG + LEUCCDEREG + AUMENTOUREREG + DERPLEURALREG + INFPULDIFREG + EDEMAPULMREG + RSRESREG +
             ZONALOCINF, data = dados)
 summary(fit)
 
 ## Testei os modelos retirando as não significativas e não relevantes para o estudo
 
-fit <- coxph(Surv(tempo,censura)~IDADE + SEXOREG + TONTURAREG + SANGRESREG + HIPOTENSAOREG + MIALGIASREG, 
+fit <- coxph(Surv(tempo,censura)~IDADE + SEXOREG + TONTURAREG + SANGRESREG + HIPOTENSAOREG + MIALGIASREG + RSRESREG, 
             data=dados)
 summary(fit) # Tentei rodar com a idade categórica, mas o resultado foi menos satisfatório
 
 
 ### Ajustando o modelos com o pacote smcure
-# dados2 contém as variáveis IDADE, SEXOREG, TONTURAREG, SANGRESREG, HIPOTENSAOREG e MIALGIASREG
-dados2 <- dados[,c('tempo', 'censura','IDADE', 'SEXOREG', 'TONTURAREG', 'SANGRESREG', 'HIPOTENSAOREG', 'MIALGIASREG')]
+# dados2 contém as variáveis IDADE, SEXOREG, TONTURAREG, SANGRESREG, HIPOTENSAOREG, MIALGIASREG e RSRESREG
+dados2 <- dados[,c('tempo', 'censura','IDADE', 'SEXO12', 'TONTURAREG', 'SANGRESREG', 'HIPOTENSAOREG', 'MIALGIASREG','RSRESREG')]
+dados2$SEXO = ifelse(dados2$SEXO12 == 1,1,0)
+
+
 colnames(dados2)
+head(dados2)
 
 
 dados2$tempo <- as.integer(dados2$tempo)
@@ -118,7 +124,7 @@ str(dados2)
 
 
 # Modelo de COX com os dados2
-fit <- coxph(Surv(tempo,censura)~IDADE + SEXOREG + TONTURAREG + SANGRESREG + HIPOTENSAOREG + MIALGIASREG,
+fit <- coxph(Surv(tempo,censura)~ IDADE + SEXOREG + TONTURAREG + SANGRESREG + HIPOTENSAOREG + MIALGIASREG + RSRESREG,
             data=dados2)
 summary(fit)
 
@@ -130,9 +136,9 @@ pd_idade <- smcure(Surv(tempo,censura)~IDADE,
             data = dados2, model = 'ph', nboot = 200)
 printsmcure(pd_idade)
 
-pd_SEXOREG <- smcure(Surv(tempo,censura)~SEXOREG,
-            cureform = ~SEXOREG,
-            data = dados2, model = 'ph', nboot = 200)
+pd_SEXOREG <- smcure(Surv(tempo,censura) ~ SEXO,
+            cureform = ~ SEXO,
+            data = dados2, model = 'ph', nboot = 150)
 printsmcure(pd_SEXOREG)
 
 
@@ -159,23 +165,24 @@ pd_MIALGIASREG <- smcure(Surv(tempo,censura)~MIALGIASREG,
             data = dados2, model = 'ph', nboot = 200)
 printsmcure(pd_MIALGIASREG)
 
+#CEFALEIAREG
 
-pd_ph_hipotensao <- smcure(Surv(tempo,censura)~IDADE+SEXOREG+TONTURAREG+SANGRESREG+MIALGIASREG+HIPOTENSAOREG,
-            cureform = ~ IDADE+SEXOREG+TONTURAREG+SANGRESREG+MIALGIASREG,
+pd_ph_hipotensao <- smcure(Surv(tempo,censura)~IDADE+SEXO+TONTURAREG+SANGRESREG+MIALGIASREG+HIPOTENSAOREG,
+            cureform = ~ IDADE+SEXO+TONTURAREG+SANGRESREG+MIALGIASREG,
             data = dados2, model = 'ph', nboot = 300)
 printsmcure(pd_ph_hipotensao)
 
 
-pd_ph <- smcure(Surv(tempo,censura)~IDADE+SEXOREG+TONTURAREG+SANGRESREG+MIALGIASREG,
-            cureform = ~ IDADE+SEXOREG+TONTURAREG+SANGRESREG+MIALGIASREG,
+pd_ph <- smcure(Surv(tempo,censura)~IDADE+SEXO+TONTURAREG+SANGRESREG+MIALGIASREG,
+            cureform = ~ IDADE+SEXO+TONTURAREG+SANGRESREG+MIALGIASREG,
             data = dados2, model = 'ph', nboot = 300)
-printsmcure(pd_ph)            
+printsmcure(pd_ph)
 
 
-pd_ph <- smcure(Surv(tempo,censura)~IDADE+SEXOREG+TONTURAREG+SANGRESREG+HIPOTENSAOREG,
-            cureform = ~ IDADE+SEXOREG+TONTURAREG+SANGRESREG,
+pd_ph <- smcure(Surv(tempo,censura)~IDADE+SEXO+TONTURAREG+SANGRESREG+HIPOTENSAOREG,
+            cureform = ~ IDADE+SEXO+TONTURAREG+SANGRESREG,
             data = dados2, model = 'ph', nboot = 300)
-printsmcure(pd_ph)   
+printsmcure(pd_ph)
 
 
 pd_teste <- smcure(Surv(tempo,censura) ~ SANGRESREG+MIALGIASREG,
