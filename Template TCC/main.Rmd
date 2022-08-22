@@ -1,9 +1,8 @@
 ---
-title: Título do TCC
-author1: Nome do Aluno 1
-author2: Nome do Aluno 2
-advisor: Nome do orientador(a)
-year: 2020
+title: FATORES DE RISCO PARA O ÓBITO POR HANTAVIROSE NO PARANÁ, 1992-2016, UMA ABORDAGEM POR UM MODELO DE FRAÇÃO DE CURA.
+author1: Pedro Henrique Pavan Gonçalves
+advisor: Silvia Emiko Shimakura
+year: 2022
 dedicatoria: |
   `r if(knitr:::is_latex_output()) paste(readLines("dedicatoria.Rmd"),
   collapse = '\n  ')`
@@ -39,7 +38,13 @@ knitr::opts_chunk$set(echo = FALSE,
 ```{r, child="introducao.Rmd"}
 ```
 
-# Revisão de Literaura
+# Objetivos 
+\bigskip
+
+```{r, child="objetivos.Rmd"}
+```
+
+# Revisão de Literatura 
 \bigskip
 
 ```{r, child="revisao.Rmd"}

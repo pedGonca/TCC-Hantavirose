@@ -21,7 +21,49 @@ summary(dados)
 str(dados)
 colnames(dados)
 
-unique(dados$RSRESREG)
+length(dados$data)
+
+
+# Criando a variável tempo
+
+# Data de óbito menos o tempo do primeiro sintoma apresentado para casos onde houve óbito
+tempo <- as.numeric(as.Date(dados$DATAOBITO,"%d/%m/%Y")-as.Date(dados$DATA1SINT,"%d/%m/%Y"))
+aux = dados$CASOCONTROLE==2
+
+# Data de alta do paciente menos o tempo do primeiro sintoma apresentado para casos onde não houve óbito
+tempo[aux] <- as.numeric(as.Date(dados$DATAALTA[aux],"%d/%m/%Y")-as.Date(dados$DATA1SINT[aux],"%d/%m/%Y"))
+
+dados$tempo <- tempo
+
+aux <- is.na(dados$tempo)
+
+dados$tempo[aux] <- as.numeric(as.Date(dados$DATAENCERR[aux],"%d/%m/%Y")-as.Date(dados$DATA1SINT[aux],"%d/%m/%Y"))
+aux <- is.na(dados$tempo)
+
+dados$tempo[aux] <- 60
+aux <- is.na(dados$tempo)
+
+aux <- dados$tempo < 0
+dados[aux,]
+
+dados$tempo[aux] <- as.numeric(as.Date(dados$DATAENCERR[aux],"%d/%m/%Y")-as.Date(dados$DATA1SINT[aux],"%d/%m/%Y"))
+aux <- dados$tempo == 0
+sum(aux)
+dados$tempo[aux] <- 1
+
+# Histograma da variável tempo
+par(mfrow = c(1,1))
+hist(dados$tempo)
+
+aux=dados$tempo>100
+dados$tempo[aux] <- as.numeric(as.Date(dados$DATAENCERR[aux],"%d/%m/%Y")-as.Date(dados$DATA1SINT[aux],"%d/%m/%Y"))
+
+aux <- dados$tempo>100
+dados$tempo[aux]<- 80
+dados$tempo <- dados$tempo[dados$tempo > 0]
+
+dados[dados$tempo < 0]
+
 
 # Criando a variável de censura
 # 0 para censura e 1 para os pacientes com data de óbito registrada
@@ -37,8 +79,8 @@ summary(dados)
 kable(table(dados$tempo))## Quanto maior o tempo, menor a quantidade de observações na variável
 kable(prop.table(table(dados$tempo))) ##
 
-# retirando tempos superiores a 50
-dados <- filter(dados, tempo <= 50)
+# retirando tempo negativo presente na base
+dados <- filter(dados, tempo >= 0)
 length(dados$tempo)
 
 
@@ -58,10 +100,12 @@ hist(dados$IDADE)
 # IDADE_CAT
 # Categorizando a idade. Será categorizado de 25 em 25 anos
 dados$IDADE_CAT <- ""
-dados$IDADE_CAT[dados$IDADE <= 25] <- '[0;25]'
-dados$IDADE_CAT[dados$IDADE > 25 & dados$IDADE <= 50] <- ']25;50]'
-dados$IDADE_CAT[dados$IDADE > 25 & dados$IDADE <= 50] <- ']25;50]'
-dados$IDADE_CAT[dados$IDADE > 50] <- '[50['
+dados$IDADE_CAT[dados$IDADE < 20] <- '[0;20]'
+dados$IDADE_CAT[dados$IDADE >= 20 & dados$IDADE <= 29] <- '[20;29]'
+dados$IDADE_CAT[dados$IDADE >= 30 & dados$IDADE <= 39] <- '[30;30]'
+dados$IDADE_CAT[dados$IDADE >= 40 & dados$IDADE <= 49] <- '[40;49]'
+dados$IDADE_CAT[dados$IDADE >= 50 & dados$IDADE <= 59] <- '[50;59]'
+dados$IDADE_CAT[dados$IDADE >= 60] <- '[60['
 
 
 ekm_IDADE_CAT <- survfit(Surv(tempo,censura) ~ IDADE_CAT, data=dados)
@@ -103,8 +147,10 @@ summary(fit) # Tentei rodar com a idade categórica, mas o resultado foi menos s
 
 
 ### Ajustando o modelos com o pacote smcure
-# dados2 contém as variáveis IDADE, SEXOREG, TONTURAREG, SANGRESREG, HIPOTENSAOREG, MIALGIASREG e RSRESREG
-dados2 <- dados[,c('tempo', 'censura','IDADE', 'SEXO12', 'TONTURAREG', 'SANGRESREG', 'HIPOTENSAOREG', 'MIALGIASREG','RSRESREG')]
+# dados2 contém as variáveis IDADE, SEXOREG, TONTURAREG, SANGRESREG, HIPOTENSAOREG, MIALGIASREG, RSRESREG e SINAISHEMOREG
+dados2 <- dados[,c('tempo', 'censura','IDADE', 'SEXO12', 'TONTURAREG', 'SANGRESREG', 'HIPOTENSAOREG', 'MIALGIASREG','RSRESREG',
+                    'SINAISHEMOREG','RESPMECANREG')]
+
 dados2$SEXO = ifelse(dados2$SEXO12 == 1,1,0)
 
 
