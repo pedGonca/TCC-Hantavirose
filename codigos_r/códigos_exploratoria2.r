@@ -102,7 +102,7 @@ hist(dados$IDADE)
 dados$IDADE_CAT <- ""
 dados$IDADE_CAT[dados$IDADE < 20] <- '[0;20]'
 dados$IDADE_CAT[dados$IDADE >= 20 & dados$IDADE <= 29] <- '[20;29]'
-dados$IDADE_CAT[dados$IDADE >= 30 & dados$IDADE <= 39] <- '[30;30]'
+dados$IDADE_CAT[dados$IDADE >= 30 & dados$IDADE <= 39] <- '[30;39]'
 dados$IDADE_CAT[dados$IDADE >= 40 & dados$IDADE <= 49] <- '[40;49]'
 dados$IDADE_CAT[dados$IDADE >= 50 & dados$IDADE <= 59] <- '[50;59]'
 dados$IDADE_CAT[dados$IDADE >= 60] <- '[60['
@@ -151,26 +151,28 @@ summary(fit) # Tentei rodar com a idade categórica, mas o resultado foi menos s
 dados2 <- dados[,c('tempo', 'censura','IDADE', 'SEXO12', 'TONTURAREG', 'SANGRESREG', 'HIPOTENSAOREG', 'MIALGIASREG','RSRESREG',
                     'SINAISHEMOREG','RESPMECANREG')]
 
-dados2$SEXO = ifelse(dados2$SEXO12 == 1,1,0)
-
-
-colnames(dados2)
-head(dados2)
+dados2$SEXO = ifelse(dados2$SEXO12 == 1,'M','F')
 
 
 dados2$tempo <- as.integer(dados2$tempo)
+dados2$IDADE <- as.integer(dados2$IDADE)
 dados2$censura <- as.integer(dados2$censura)
+
+
+dados2 <- dados2 %>% mutate_at(c('TONTURAREG', 'SANGRESREG', 'HIPOTENSAOREG', 'MIALGIASREG',
+                    'SINAISHEMOREG','RESPMECANREG'), as.logical)
+
 str(dados2)
 
 
-dados2 <- dados2 %>% mutate_at(c("SEXOREG", "TONTURAREG", "SANGRESREG", "HIPOTENSAOREG", "MIALGIASREG"), as.logical)
 
 head(dados2)
 str(dados2)
 
 
 # Modelo de COX com os dados2
-fit <- coxph(Surv(tempo,censura)~ IDADE + SEXOREG + TONTURAREG + SANGRESREG + HIPOTENSAOREG + MIALGIASREG + RSRESREG,
+fit <- coxph(Surv(tempo,censura)~ IDADE + SEXO + TONTURAREG + SANGRESREG + HIPOTENSAOREG + MIALGIASREG + RSRESREG +
+                SINAISHEMOREG + RESPMECANREG,
             data=dados2)
 summary(fit)
 
@@ -182,6 +184,7 @@ pd_idade <- smcure(Surv(tempo,censura)~IDADE,
             data = dados2, model = 'ph', nboot = 200)
 printsmcure(pd_idade)
 
+# converge
 pd_SEXOREG <- smcure(Surv(tempo,censura) ~ SEXO,
             cureform = ~ SEXO,
             data = dados2, model = 'ph', nboot = 150)
@@ -193,13 +196,13 @@ pd_TONTURAREG <- smcure(Surv(tempo,censura)~TONTURAREG,
             data = dados2, model = 'ph', nboot = 200)
 printsmcure(pd_TONTURAREG)
 
-
+# converge
 pd_SANGRESREG <- smcure(Surv(tempo,censura)~SANGRESREG,
             cureform = ~SANGRESREG,
             data = dados2, model = 'ph', nboot = 200)
 printsmcure(pd_SANGRESREG)
 
-
+# converge
 pd_HIPOTENSAOREG <- smcure(Surv(tempo,censura)~HIPOTENSAOREG,
             cureform = ~HIPOTENSAOREG,
             data = dados2, model = 'ph', nboot = 200)
@@ -211,7 +214,39 @@ pd_MIALGIASREG <- smcure(Surv(tempo,censura)~MIALGIASREG,
             data = dados2, model = 'ph', nboot = 200)
 printsmcure(pd_MIALGIASREG)
 
-#CEFALEIAREG
+
+pd_SINAISHEMOREG <- smcure(Surv(tempo,censura)~SINAISHEMOREG,
+            cureform = ~MIALGIASREG,
+            data = dados2, model = 'ph', nboot = 200)
+printsmcure(pd_SINAISHEMOREG)
+
+## Apresenta "NA"
+pd_RESPMECANREG <- smcure(Surv(tempo,censura)~RESPMECANREG,
+            cureform = ~RESPMECANREG,
+            data = dados2, model = 'ph', nboot = 200)
+printsmcure(pd_RESPMECANREG)
+table(dados2$RESPMECANREG)
+
+# Modelo de cura como se fosse uma Reg LOGISTICA
+# Modelo de sobrevida como se fosse COX
+
+## Smcure com todas variáveis
+colnames(dados2)
+head(dados2)
+str(dados2)
+dados2
+
+
+pd_todas_variaveis <- smcure(Surv(tempo,censura) ~ IDADE + TONTURAREG + SANGRESREG + HIPOTENSAOREG + MIALGIASREG +
+                SINAISHEMOREG + RESPMECANREG,
+            cureform = ~ IDADE + TONTURAREG + SANGRESREG + HIPOTENSAOREG + MIALGIASREG +
+                SINAISHEMOREG + RESPMECANREG,
+            data = dados2, model = 'ph', nboot = 400)
+
+pd_todas_variaveis <- smcure(Surv(tempo,censura) ~ SANGRESREG+MIALGIASREG,
+            cureform = ~ IDADE+SANGRESREG+MIALGIASREG,
+            data = dados2, model = 'ph', nboot = 300)
+
 
 pd_ph_hipotensao <- smcure(Surv(tempo,censura)~IDADE+SEXO+TONTURAREG+SANGRESREG+MIALGIASREG+HIPOTENSAOREG,
             cureform = ~ IDADE+SEXO+TONTURAREG+SANGRESREG+MIALGIASREG,
