@@ -24,6 +24,7 @@ colnames(dados)
 length(dados$data)
 
 
+
 # Criando a variável tempo
 
 # Data de óbito menos o tempo do primeiro sintoma apresentado para casos onde houve óbito
@@ -64,6 +65,8 @@ dados$tempo <- dados$tempo[dados$tempo > 0]
 
 dados[dados$tempo < 0]
 
+dados <- filter(dados, tempo >= 1)
+
 
 # Criando a variável de censura
 # 0 para censura e 1 para os pacientes com data de óbito registrada
@@ -75,9 +78,12 @@ hist(dados$tempo)
 
 # Alteradas e padronizadas todas as variáveis, temos:
 summary(dados)
+length(dados$tempo)
+
 
 kable(table(dados$tempo))## Quanto maior o tempo, menor a quantidade de observações na variável
 kable(prop.table(table(dados$tempo))) ##
+
 
 # retirando tempo negativo presente na base
 dados <- filter(dados, tempo >= 0)
@@ -147,7 +153,8 @@ summary(fit) # Tentei rodar com a idade categórica, mas o resultado foi menos s
 
 
 ### Ajustando o modelos com o pacote smcure
-# dados2 contém as variáveis IDADE, SEXOREG, TONTURAREG, SANGRESREG, HIPOTENSAOREG, MIALGIASREG, RSRESREG e SINAISHEMOREG
+# dados2 contém as variáveis IDADE, SEXOREG, TONTURAREG, CEFALEIAREG, SANGRESREG, DISPNEIAREG, HIPOTENSAOREG, MIALGIASREG, 
+# RSRESREG, SINAISHEMOREG, INTERNACAOREG, EDEMAPULMREG, AUMENTOUREREG
 dados2 <- dados[,c('tempo', 'censura','IDADE', 'SEXO12', 'TONTURAREG', 'SANGRESREG', 'HIPOTENSAOREG', 'MIALGIASREG','RSRESREG',
                     'SINAISHEMOREG','RESPMECANREG')]
 
@@ -163,7 +170,6 @@ dados2 <- dados2 %>% mutate_at(c('TONTURAREG', 'SANGRESREG', 'HIPOTENSAOREG', 'M
                     'SINAISHEMOREG','RESPMECANREG'), as.logical)
 
 str(dados2)
-
 
 
 head(dados2)

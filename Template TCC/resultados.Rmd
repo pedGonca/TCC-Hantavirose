@@ -1,1 +1,215 @@
-Apresente os resultados e a discussão obtidos aqui.
+## Material final do Estudo
+
+```{r, include= FALSE, message= FALSE, warning= FALSE}
+# Setando o diretório
+setwd("~/RStudio Facul/CE094 - Laboratório B/tcc-hantavirose/Template TCC")
+
+# Pacotes
+library(tidyverse)
+library(survival)
+library(survminer)
+library(ggfortify)
+library(knitr)
+library(gridExtra)
+library(xtable)
+
+# Lendo os dados e analisando sua estrutura
+path <- 'hantavir2.csv'
+dados <- read.csv(path, 
+    header = TRUE, sep = ';')
+
+# Criando a variável tempo
+
+# Data de óbito menos o tempo do primeiro sintoma apresentado para casos onde houve óbito
+tempo <- as.numeric(as.Date(dados$DATAOBITO,"%d/%m/%Y")-as.Date(dados$DATA1SINT,"%d/%m/%Y"))
+aux = dados$CASOCONTROLE==2
+
+# Data de alta do paciente menos o tempo do primeiro sintoma apresentado para casos onde não houve óbito
+tempo[aux] <- as.numeric(as.Date(dados$DATAALTA[aux],"%d/%m/%Y")-as.Date(dados$DATA1SINT[aux],"%d/%m/%Y"))
+
+dados$tempo <- tempo
+
+aux <- is.na(dados$tempo)
+
+dados$tempo[aux] <- as.numeric(as.Date(dados$DATAENCERR[aux],"%d/%m/%Y")-as.Date(dados$DATA1SINT[aux],"%d/%m/%Y"))
+aux <- is.na(dados$tempo)
+
+dados$tempo[aux] <- 60
+aux <- is.na(dados$tempo)
+
+aux <- dados$tempo < 0
+
+dados$tempo[aux] <- as.numeric(as.Date(dados$DATAENCERR[aux],"%d/%m/%Y")-as.Date(dados$DATA1SINT[aux],"%d/%m/%Y"))
+aux <- dados$tempo == 0
+sum(aux)
+dados$tempo[aux] <- 1
+
+aux=dados$tempo>100
+dados$tempo[aux] <- as.numeric(as.Date(dados$DATAENCERR[aux],"%d/%m/%Y")-as.Date(dados$DATA1SINT[aux],"%d/%m/%Y"))
+
+aux <- dados$tempo>100
+dados$tempo[aux]<- 80
+dados <- filter(dados, tempo >= 1)
+
+dados[dados$tempo < 0]
+
+
+
+# Criando a variável de censura
+# 0 para censura e 1 para os pacientes com data de óbito registrada
+dados$censura = ifelse(dados$CASOCONTROLE == 1,0,1)
+
+# Categorizando a idade 
+dados$IDADE_CAT <- ""
+dados$IDADE_CAT[dados$IDADE < 20] <- '[0;20]'
+dados$IDADE_CAT[dados$IDADE >= 20 & dados$IDADE <= 29] <- '[20;29]'
+dados$IDADE_CAT[dados$IDADE >= 30 & dados$IDADE <= 39] <- '[30;39]'
+dados$IDADE_CAT[dados$IDADE >= 40 & dados$IDADE <= 49] <- '[40;49]'
+dados$IDADE_CAT[dados$IDADE >= 50 & dados$IDADE <= 59] <- '[50;59]'
+dados$IDADE_CAT[dados$IDADE >= 60] <- '[60['
+
+```
+
+
+A princípio foi realizada uma análise descritiva dos dados visando um maior entendimento da base. 
+
+A base de dados original era composta por 280 observações e 69 variáveis, que são elas os 69 campos presentes na ficha de investigação preenchida pelos pacientes.
+
+Após a importação dos dados para o R, logo de cara foi possível notar uma grande presença de dados *missing*, ou seja, uma grande quantidade de dados faltantes para as variáveis. Tendo em vista esse problema, foi decidido que as variáveis que apresentassem dados faltantes seriam retiradas, fazendo assim com que restassem apenas 14 variáveis para a análise. A seguir temos uma breve apresentação das variáveis:
+
+1. Tempo: Tempo decorrido do primeiro sintoma do paciente até o óbito ou perda do acompanhamento.
+2. Idade: Idade do paciente.
+3. Sexo: Sexo do paciente (homem ou mulher).
+4. Tontura: Apresentou tontura (sim ou não).
+5. Cefaleia: Apresentou cefaleia (sim ou não). 
+6. Sangramento Respiratório: Apresentou sangramento respiratório (sim ou não).
+7. Dispineia: Apresentou falta de ar (sim ou não).
+8. Hipotensão: Apresentou problemas com pressão baixa (sim ou não).
+9. Mialgia: Apresentou dores musculares (sim ou não).
+10. Regional de Saúde: Regional de saúde na qual o paciente foi atendido, podendo ser União da vitória, Guarapuava, Irati e Outros (sim ou não).
+11. Sinais Hemorrágicos: Apresentou sinais hemorrágicos (sim ou não).
+12. Internação: Paciente foi internado no periodo em que esteve com a doença (sim ou não).
+13. Diarreia: Apresentou diarreia (sim ou não).
+14. Ureia e Creatina: Aumento de Ureia e Creatina (sim ou não).
+
+Para fins de visualização e melhor intendimento da variável, entendeu-se que seria adequado categorizar a variável *idade*, entre indivíduos de 1 a 20 anos de idade, 20 a 29, 30 a 39, 40 a 49, 50 a 59 e com idade superior a 60 anos.
+
+Conforme já foi discutido anteriormente na seção xxxx, em análise de sobrevivência, as censuras são compostas por indivíduos do estudo que ainda não experimentaram o evento final, portanto, além das 14 variáveis escolhidas que sobraram para a continuação do estudo, ainda foi adicionada a variável de censura, onde o indíviduo que apresentou censura é *1* e *0* para o indivíduo não censurado.
+
+## Analise Descritiva
+
+Inicialmente, foi realizada uma análise descritiva dos dados apresentados na Seção 5.1 a fim de analisar a quantidade de indivíduos em cada categoria das variáveis.
+
+Na figura 1, conseguimos analisar a distribuição e comportamento das variáveis idade e sexo, além das quantidades de censura para cada uma.
+
+```{r fig1, fig.cap='Distribuição das variáveis Idade e Sexo',fig.pos="!h", echo = FALSE, fig.height= 3.6, fig.width = 6.4}
+
+plot1 <- ggplot(data = dados, aes(x = IDADE_CAT)) +
+  geom_bar(aes(fill = CensuraPlot), width = 0.6) +
+  labs(x = "Idade", y = "Quantidade") + 
+  theme(legend.position = "top") +
+  labs(fill = "Censura") +
+  scale_fill_manual(values = c("steelblue", "darkgray")) +
+  theme_minimal() +
+  theme(legend.position = "top") 
+
+plot2 <- ggplot(data = dados, aes(x = SEXOREG)) +
+  geom_bar(aes(fill = CensuraPlot), width = 0.6) +
+  labs(x = "Sexo", y = "Quantidade") + 
+  theme(legend.position = "top") +
+  labs(fill = "Censura") +
+  scale_fill_manual(values = c("steelblue", "darkgray")) +
+  theme_minimal() +
+  theme(legend.position = "top") 
+
+grid.arrange(plot1,plot2, ncol = 2, nrow = 1)
+```
+
+Dos 280 indivíduos presentes no estudo, 85,0% (238/280) eram do sexo masculino e os outros 15% (42/280) do sexo feminino, no entanto o sexo feminino apresentou maior letalidade se comparada ao sexo masculino, o que pode ser decorrente da baixa quantidade de observações presentes para o sexo feminino. 
+
+Em relação a idade, a média dos indivíduos presentes é de 33 anos que também equivale a mediana dos dados. O indivíduo com a menor idade possui 2 anos, enquanto o indivíduo com a maior idade possui 80. 
+
+Entre as categorias da variável idade, 32% (88/280) estão presentes na categoria de indivíduos de 30 a 39 anos, e apenas 3% (9/280) dos indivíduos do estudo presentes na categoria de 60 ou mais anos de idade.
+
+```{r fig2, fig.cap='Distribuição da variável tempo',fig.pos="!h", echo = FALSE, fig.height= 2.5, fig.width = 6.5, warning=FALSE, message=FALSE}
+plot3 <- ggplot(data = dados, aes(x = tempo, fill = CensuraPlot)) +
+  geom_histogram() +
+  labs(x = "Tempo", y = "Quantidade") + 
+  labs(fill = "Censura") +
+  scale_fill_manual(values = c("steelblue", "darkgray")) +
+  theme_minimal() +
+  theme(legend.position = "top") ; plot3
+```
+
+Quanto a variável resposta tempo, conforme a figura 2, cerca de 88% (250/280) dos indivíduos apresentam um tempo igual ou inferior a 22 dias. Um ponto interessante de se obervar é o fato de que para um tempo superior a 22 dias, apenas 2 dos 30 indivíduos apresentam censura, ou seja, experimentaram o evento de interesse (óbito).
+
+Outro ponto de atenção é a alta incidência de censura para os tempos iniciais. Cerca de 94% das censuras registradas aconteceram para tempos iguais ou inferiores à 10, e apenas 1 censura entre os indivíduos com tempo superior a 40.
+
+Para a regional de saúde em que ocorreu o atendimento, olhando a figura 3 União da vitória com 33% (93/280), foi a regional de saúde com o maior número de ocorrências, e Irati com 16% (46/280) a com o menor número de ocorrências registradas.
+
+```{r fig3, fig.cap='Distribuição da variável regional de saúde',fig.pos="!h", echo = FALSE, fig.height= 2.5, fig.width = 6.5, warning=FALSE, message=FALSE}
+plot4 <- ggplot(data = dados, aes(x = RSRESREG, fill = CensuraPlot)) +
+  geom_bar(width = 0.5) +
+  labs(x = "Regional de saúde", y = "Quantidade") + 
+  labs(fill = "Censura") +
+  scale_fill_manual(values = c("steelblue", "darkgray")) +
+  theme_minimal() +
+  theme(legend.position = "top") ; plot4
+```
+
+Quanto as variáveis relacionadas a sintomas, olhando a tabela 1 conseguimos as frequências absolutas e relativas (percentuais) em cada uma das categiorias, bem como os percentuais de falhas (apresentar o evento de interesse) e censura.
+
+O sintoma que esteve mais presente entre os infectados foi a febre, presente em 262 dos 280 indivíduos, seguido da cefaleia em 242. O sintoma que se mostrou menos presente
+
+```{r}
+csv <- read.csv("Sintomas.csv", sep = ";", header = TRUE, encoding = "ASCII")
+```
+
+
+```{r, results='asis'}
+xtable(csv, caption =
+               "Classes gramaticais das palavras presentes na fala dos indivíduos, considerando os grupos de interesse.",
+       label = "tab:classeg", align = "lccccc")
+```
+
+
+
+
+
+```{r, echo = FALSE, include=FALSE}
+unique(dados$RSRESREG)
+table(dados$TONTURAREG)
+prop.table(table(dados$TONTURAREG))
+view(dados)
+#sangres 156
+#hipo 148
+
+# dados2 contém as variáveis IDADE, SEXOREG, TONTURAREG, CEFALEIAREG, SANGRESREG, DISPNEIAREG, HIPOTENSAOREG, MIALGIASREG, 
+# RSRESREG, SINAISHEMOREG, INTERNACAOREG, EDEMAPULMREG, AUMENTOUREREG
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

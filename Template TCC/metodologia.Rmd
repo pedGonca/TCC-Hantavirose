@@ -2,7 +2,7 @@
 
 ### Conjunto de dados
 
-O conjunto de dados composto por 280 indivíduos utilizado é proveniente do Sistema de Informação de Agravos de Notificação (SINAN), onde para todos os indivíduos presentes na base, as informações referentes foram retiradas da ficha de investigação preenchidas manualmente. A ficha de investigação preenchida pelos pancientes foi anexada aos apêndices do trabalho.
+O conjunto de dados composto por 280 indivíduos e 69 variáveis utilizado é proveniente do Sistema de Informação de Agravos de Notificação (SINAN), onde para todos os indivíduos presentes na base, as informações referentes foram retiradas da ficha de investigação, onde cada um dos 69 campos presentes na ficha foram preenchidos manualmente. A ficha de investigação preenchida pelos pancientes foi anexada aos apêndices do trabalho.
 
 A população do estudo compreendeu todos os casos de hantavirose confirmados no estado do Paraná e que apresentaram início dos sintomas dentro do período do estudo (Janeiro de 1992 a Junho de 2016)
 
@@ -10,9 +10,15 @@ Neste trabalho, a variável resposta de interesse tempo (em dias), foi calculada
 
 $$tempo = \text{data óbito} - \text{data primeiro sintoma}$$
 
-Feito isso, os dados foram divididos entre cura e óbito, sendo cura o “indivíduo notificado por serviço de saúde do Estado do Paraná, no período de estudo e que tenha sido confirmado para hantavirose com evolução para cura” e óbito, o “indivíduo notificado por serviço de saúde do Estado do Paraná, no período de estudo e que tenha sido confirmado para hantavirose com evolução para óbito”. Pacientes que não apresentaram data de óbito foram considerados como censura.
+Para os indivíduos que não apresentaram data de óbito, o tempo (em dias) foi calculada através do tempo entre as datas data de encerramento e a data do 1º sintoma do indivíduo conforme a função a seguir.
 
-Dos 280 indivíduos presentes na base, 109 (39%) foram a óbito e 171 (61%) não apresentaram o evento de interesse.
+$$tempo = \text{data encerramento} - \text{data primeiro sintoma}$$
+
+Feito isso, os dados foram divididos entre cura e óbito, sendo cura o “indivíduo notificado por serviço de saúde do Estado do Paraná, no período de estudo e que tenha sido confirmado para hantavirose com evolução para cura” e óbito, o “indivíduo notificado por serviço de saúde do Estado do Paraná, no período de estudo e que tenha sido confirmado para hantavirose com evolução para óbito”. 
+
+Pacientes que não apresentaram data de óbito foram considerados como censura.
+
+\newpage
 
 ### Recursos Computacionais
 

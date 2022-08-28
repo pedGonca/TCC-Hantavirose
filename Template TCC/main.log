@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.8.20)  21 AUG 2022 20:01
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.8.20)  28 AUG 2022 19:21
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -932,11 +932,33 @@ File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 
 ] [11] [12
 
-] (./main.bbl [13
+]
+<main_files/figure-latex/fig1-1.pdf, id=173, 461.725pt x 259.97125pt>
+File: main_files/figure-latex/fig1-1.pdf Graphic file (type pdf)
+<use main_files/figure-latex/fig1-1.pdf>
+Package pdftex.def Info: main_files/figure-latex/fig1-1.pdf  used on input line 384.
+(pdftex.def)             Requested size: 364.00139pt x 204.95058pt.
+<main_files/figure-latex/fig2-1.pdf, id=174, 469.755pt x 180.675pt>
+File: main_files/figure-latex/fig2-1.pdf Graphic file (type pdf)
+<use main_files/figure-latex/fig2-1.pdf>
+Package pdftex.def Info: main_files/figure-latex/fig2-1.pdf  used on input line 399.
+(pdftex.def)             Requested size: 364.00139pt x 139.9996pt.
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+<main_files/figure-latex/fig3-1.pdf, id=175, 469.755pt x 180.675pt>
+File: main_files/figure-latex/fig3-1.pdf Graphic file (type pdf)
+<use main_files/figure-latex/fig3-1.pdf>
+Package pdftex.def Info: main_files/figure-latex/fig3-1.pdf  used on input line 414.
+(pdftex.def)             Requested size: 364.00139pt x 139.9996pt.
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[13 <./main_files/figure-latex/fig1-1.pdf>] [14 <./main_files/figure-latex/fig2-1.pdf> <./main_files/figure-latex/fig3-1.pdf>] (./main.bbl [15
 
 ]
 bibitemlist
-) [14
+) [16
 
 ]
 \tf@toc=\write4
@@ -944,18 +966,18 @@ bibitemlist
 
 (./main.aux) ) 
 Here is how much of TeX's memory you used:
- 20291 strings out of 479618
- 335594 string characters out of 5876231
- 789204 words of memory out of 5000000
- 38336 multiletter control sequences out of 15000+600000
- 533294 words of font info for 125 fonts, out of 8000000 for 9000
+ 20379 strings out of 479618
+ 337346 string characters out of 5876231
+ 792957 words of memory out of 5000000
+ 38378 multiletter control sequences out of 15000+600000
+ 534134 words of font info for 134 fonts, out of 8000000 for 9000
  16 hyphenation exceptions out of 8191
- 87i,12n,91p,1001b,641s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 87i,13n,91p,1001b,641s stack positions out of 10000i,1000n,20000p,200000b,200000s
 {c:/Users/Pedro/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{c:/Users/Pedro/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{c:/Users/Pedro/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{c:/Users/Pedro/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{c:/Users/Pedro/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}<c:/Users/Pedro/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb><c:/Users/Pedro/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi12.pfb><c:/Users/Pedro/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb><c:/Users/Pedro/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb><c:/Users/Pedro/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri12.pfb><c:/Users/Pedro/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmss12.pfb><c:/Users/Pedro/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmss17.pfb><c:/Users/Pedro/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmssbx10.pfb><c:/Users/Pedro/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb>
-Output written on main.pdf (15 pages, 209888 bytes).
+Output written on main.pdf (17 pages, 229275 bytes).
 PDF statistics:
- 306 PDF objects out of 1000 (max. 8388607)
- 265 compressed objects within 3 object streams
- 71 named destinations out of 1000 (max. 500000)
- 41129 words of extra memory for PDF output out of 42996 (max. 10000000)
+ 368 PDF objects out of 1000 (max. 8388607)
+ 318 compressed objects within 4 object streams
+ 95 named destinations out of 1000 (max. 500000)
+ 41160 words of extra memory for PDF output out of 42996 (max. 10000000)
 
