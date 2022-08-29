@@ -2,7 +2,7 @@
 
 ```{r, include= FALSE, message= FALSE, warning= FALSE}
 # Setando o diretório
-setwd("~/RStudio Facul/CE094 - Laboratório B/tcc-hantavirose/Template TCC")
+#setwd("~/RStudio Facul/CE094 - Laboratório B/tcc-hantavirose/Template TCC")
 
 # Pacotes
 library(tidyverse)
@@ -157,11 +157,13 @@ plot4 <- ggplot(data = dados, aes(x = RSRESREG, fill = CensuraPlot)) +
   theme(legend.position = "top") ; plot4
 ```
 
-Quanto as variáveis relacionadas a sintomas, olhando a tabela 1 conseguimos as frequências absolutas e relativas (percentuais) em cada uma das categiorias, bem como os percentuais de falhas (apresentar o evento de interesse) e censura.
+Quanto as variáveis relacionadas a sintomas, olhando a tabela 1 conseguimos as frequências absolutas e relativas (percentuais) em cada uma das categiorias, bem como as quantidades de falhas (apresentar o evento de interesse óbito) e censura.
 
-O sintoma que esteve mais presente entre os infectados foi a febre, presente em 262 dos 280 indivíduos, seguido da cefaleia em 242. O sintoma que se mostrou menos presente
+O sintoma que esteve mais presente entre os infectados foi a cefaleia, presente em 242 dos 280 indivíduos, seguido da mialgia em 242. 
 
-```{r}
+O sintomas que se mostraram menos presentes foram os sintomas mais extremos. Sinais hemorrágicos com 31 aparições seguido da diarreia em 71 dos 280 indivíduos.
+
+```{r, echo = FALSE}
 csv <- read.csv("Sintomas.csv", sep = ";", header = TRUE, encoding = "ASCII")
 ```
 
@@ -169,46 +171,9 @@ csv <- read.csv("Sintomas.csv", sep = ";", header = TRUE, encoding = "ASCII")
 ```{r, results='asis'}
 xtable(csv, caption =
                "Classes gramaticais das palavras presentes na fala dos indivíduos, considerando os grupos de interesse.",
-       label = "tab:classeg", align = "lccccc")
+       label = "tab:classeg")
+       #, align = "lccccc")
 ```
-
-
-
-
-
-```{r, echo = FALSE, include=FALSE}
-unique(dados$RSRESREG)
-table(dados$TONTURAREG)
-prop.table(table(dados$TONTURAREG))
-view(dados)
-#sangres 156
-#hipo 148
-
-# dados2 contém as variáveis IDADE, SEXOREG, TONTURAREG, CEFALEIAREG, SANGRESREG, DISPNEIAREG, HIPOTENSAOREG, MIALGIASREG, 
-# RSRESREG, SINAISHEMOREG, INTERNACAOREG, EDEMAPULMREG, AUMENTOUREREG
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
