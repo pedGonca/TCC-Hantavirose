@@ -1,0 +1,17 @@
+﻿-;;-;Probabilidade de Cura;-;-;Tempo de falha;-
+Parâmetro;Categoria;Coeficiente;Erro Padrão;Valor-p;Coeficiente;Erro Padrão;Valor-p
+Idade;-;-0,005;0,156;0,768;-0,122;0,009;0,19
+Sexo;Masculino;-1,915;0,612;0,001;;;
+Tontura;Sim;-1,13;0,439;0,001;-0,438;0,239;0,067
+Cefaleia;Sim;-1,395;1,262;0,268;-0,253;0,322;0,432
+Sangramento Respiratório;Sim;1,997;0,491;0,001;1,092;0,322;0,001
+Dispineia;Sim;2,923;0,462;0,001;0,053;0,362;0,883
+Hipotensão;Sim;6,673;0,576;0,001;0,402;0,298;0,177
+Mialgia;Sim;-0,189;0,478;0,001;-0,498;0,338;0,14
+Regional de Saúde;Irati;0,983;0,651;0,001;-0,954;0,505;0,058
+-;Outros;0,242;0,523;0,001;-0,88;0,49;0,072
+-;União da Vitória;2,297;0,626;0,001;-0,79;0,581;0,174
+Sinais Hemorrágicos;Sim;4,469;2,566;0,001;-0,045;0,342;0,896
+Internação;Sim;2,489;0,76;0,001;-1,531;0,67;0,224
+Diarreia;Sim;-1,636;0,391;0,001;0,943;0,29;0,001
+Respirador Mecânico;Sim;7,394;0,585;0,001;-0,741;0,27;0,006

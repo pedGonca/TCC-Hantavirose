@@ -1,19 +1,19 @@
-﻿Sintomas;Categoria;Freq Absoluta;Freq Relativa;Censura;Falha;;
-Tontura;Sim;161;57,50%;171;1;;
-;Não;119;42,50%;1;1;;
-Cefaleia;Sim;242;86,43%;1;1;;
-;Não;38;13,57%;1;1;;
-Sangramento Respiratório;Sim;123;43,93%;1;1;;
-;Não;157;56,07%;1;1;;
-Dispineia;Sim;199;71,07%;1;1;;
-;Não;81;28,93%;1;1;;
-Hipotensão;Sim;148;52,86%;1;1;;
-;Não;132;47,14%;1;1;;
-Mialgia;Sim;228;81,43%;1;1;;
-;Não;52;18,57%;1;1;;
-Sinais Hemorrágicos;Sim;31;11,07%;1;1;;
-;Não;249;88,93%;1;1;;
-Diarreia;Sim;71;25,36%;1;1;;
-;Não;209;74,64%;1;1;;
-Ureia e Creatina;Sim;91;32,50%;1;1;;
-;Não;189;67,50%;1;1;;
+﻿Variável;Categoria;Freq Absoluta;Freq Relativa;Censura;Falha
+Tontura;Sim;162;57,50%;113;49
+-;Não;118;42,50%;59;59
+Cefaleia;Sim;242;86,43%;155;87
+-;Não;38;13,57%;17;21
+Sangramento Respiratório;Sim;123;43,93%;45;78
+-;Não;157;56,07%;127;30
+Dispineia;Sim;199;71,07%;107;92
+-;Não;81;28,93%;65;16
+Hipotensão;Sim;148;52,86%;54;94
+-;Não;132;47,14%;118;14
+Mialgia;Sim;229;81,43%;147;82
+-;Não;51;18,57%;25;26
+Sinais Hemorrágicos;Sim;31;11,07%;14;17
+-;Não;249;88,93%;158;91
+Diarreia;Sim;72;25,36%;45;27
+-;Não;208;74,64%;127;81
+Respirador Mecânico;Sim;118;32,50%;45;73
+-;Não;162;67,50%;127;35

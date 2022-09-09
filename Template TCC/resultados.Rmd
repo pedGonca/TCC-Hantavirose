@@ -57,7 +57,7 @@ dados[dados$tempo < 0]
 
 # Criando a variável de censura
 # 0 para censura e 1 para os pacientes com data de óbito registrada
-dados$censura = ifelse(dados$CASOCONTROLE == 1,0,1)
+dados$censura = ifelse(dados$CASOCONTROLE == 1,1,0)
 
 # Categorizando a idade 
 dados$IDADE_CAT <- ""
@@ -67,7 +67,6 @@ dados$IDADE_CAT[dados$IDADE >= 30 & dados$IDADE <= 39] <- '[30;39]'
 dados$IDADE_CAT[dados$IDADE >= 40 & dados$IDADE <= 49] <- '[40;49]'
 dados$IDADE_CAT[dados$IDADE >= 50 & dados$IDADE <= 59] <- '[50;59]'
 dados$IDADE_CAT[dados$IDADE >= 60] <- '[60['
-
 ```
 
 
@@ -75,7 +74,7 @@ A princípio foi realizada uma análise descritiva dos dados visando um maior en
 
 A base de dados original era composta por 280 observações e 69 variáveis, que são elas os 69 campos presentes na ficha de investigação preenchida pelos pacientes.
 
-Após a importação dos dados para o R, logo de cara foi possível notar uma grande presença de dados *missing*, ou seja, uma grande quantidade de dados faltantes para as variáveis. Tendo em vista esse problema, foi decidido que as variáveis que apresentassem dados faltantes seriam retiradas, fazendo assim com que restassem apenas 14 variáveis para a análise. A seguir temos uma breve apresentação das variáveis:
+Devido a presença de dados faltantes para várias variáveis, com algumas atingindo um percentual de 96% de dados faltantes, decidiu-se restringir as análises com as seguintes variáveis:
 
 1. Tempo: Tempo decorrido do primeiro sintoma do paciente até o óbito ou perda do acompanhamento.
 2. Idade: Idade do paciente.
@@ -90,34 +89,36 @@ Após a importação dos dados para o R, logo de cara foi possível notar uma gr
 11. Sinais Hemorrágicos: Apresentou sinais hemorrágicos (sim ou não).
 12. Internação: Paciente foi internado no periodo em que esteve com a doença (sim ou não).
 13. Diarreia: Apresentou diarreia (sim ou não).
-14. Ureia e Creatina: Aumento de Ureia e Creatina (sim ou não).
+14. Respirador Mecânico: Precisou de respirador mecânico (sim ou não).
 
-Para fins de visualização e melhor intendimento da variável, entendeu-se que seria adequado categorizar a variável *idade*, entre indivíduos de 1 a 20 anos de idade, 20 a 29, 30 a 39, 40 a 49, 50 a 59 e com idade superior a 60 anos.
+Para fins de visualização e melhor intendimento da variável, entendeu-se que seria adequado categorizar a variável *idade* para a análise exploratória, entre indivíduos de 1 a 20 anos de idade, 20 a 29, 30 a 39, 40 a 49, 50 a 59 e com idade superior a 60 anos.
 
-Conforme já foi discutido anteriormente na seção xxxx, em análise de sobrevivência, as censuras são compostas por indivíduos do estudo que ainda não experimentaram o evento final, portanto, além das 14 variáveis escolhidas que sobraram para a continuação do estudo, ainda foi adicionada a variável de censura, onde o indíviduo que apresentou censura é *1* e *0* para o indivíduo não censurado.
+Conforme já foi discutido anteriormente na seção 4.2.1.3, em análise de sobrevivência, as censuras são compostas por indivíduos do estudo que ainda não experimentaram o evento final, portanto, além das 14 variáveis escolhidas, ainda foi adicionada a variável de censura, onde o indíviduo que apresentou censura é *0* e *1* para o indivíduo não censurado.
 
 ## Analise Descritiva
 
 Inicialmente, foi realizada uma análise descritiva dos dados apresentados na Seção 5.1 a fim de analisar a quantidade de indivíduos em cada categoria das variáveis.
 
-Na figura 1, conseguimos analisar a distribuição e comportamento das variáveis idade e sexo, além das quantidades de censura para cada uma.
+Visando entender o comportamento das variáveis assim como a distribuição entre a censura, as visualizações para as variáveis foram feitas distinguindo entre censura sim e não.
+
+Na Figura 1, conseguimos analisar a distribuição e comportamento das variáveis idade e sexo, além de suas respectivas censuras.
 
 ```{r fig1, fig.cap='Distribuição das variáveis Idade e Sexo',fig.pos="!h", echo = FALSE, fig.height= 3.6, fig.width = 6.4}
 
 plot1 <- ggplot(data = dados, aes(x = IDADE_CAT)) +
-  geom_bar(aes(fill = CensuraPlot), width = 0.6) +
+  geom_bar(aes(fill = CensuraPlot), width = 0.6, position = "dodge") +
   labs(x = "Idade", y = "Quantidade") + 
   theme(legend.position = "top") +
-  labs(fill = "Censura") +
+  labs(fill = "Óbito") +
   scale_fill_manual(values = c("steelblue", "darkgray")) +
   theme_minimal() +
   theme(legend.position = "top") 
 
 plot2 <- ggplot(data = dados, aes(x = SEXOREG)) +
-  geom_bar(aes(fill = CensuraPlot), width = 0.6) +
+  geom_bar(aes(fill = CensuraPlot), width = 0.6, position = "dodge") +
   labs(x = "Sexo", y = "Quantidade") + 
   theme(legend.position = "top") +
-  labs(fill = "Censura") +
+  labs(fill = "Óbito") +
   scale_fill_manual(values = c("steelblue", "darkgray")) +
   theme_minimal() +
   theme(legend.position = "top") 
@@ -125,55 +126,306 @@ plot2 <- ggplot(data = dados, aes(x = SEXOREG)) +
 grid.arrange(plot1,plot2, ncol = 2, nrow = 1)
 ```
 
-Dos 280 indivíduos presentes no estudo, 85,0% (238/280) eram do sexo masculino e os outros 15% (42/280) do sexo feminino, no entanto o sexo feminino apresentou maior letalidade se comparada ao sexo masculino, o que pode ser decorrente da baixa quantidade de observações presentes para o sexo feminino. 
-
-Em relação a idade, a média dos indivíduos presentes é de 33 anos que também equivale a mediana dos dados. O indivíduo com a menor idade possui 2 anos, enquanto o indivíduo com a maior idade possui 80. 
+Dos 280 indivíduos presentes no estudo, 85,0% (238/280) eram do sexo masculino e os outros 15% (42/280) do sexo feminino. Em relação a idade, a média dos indivíduos é de 33 anos que também equivale a mediana dos dados. O indivíduo com a menor idade possui 2 anos, enquanto o indivíduo com a maior idade possui 80. 
 
 Entre as categorias da variável idade, 32% (88/280) estão presentes na categoria de indivíduos de 30 a 39 anos, e apenas 3% (9/280) dos indivíduos do estudo presentes na categoria de 60 ou mais anos de idade.
 
-```{r fig2, fig.cap='Distribuição da variável tempo',fig.pos="!h", echo = FALSE, fig.height= 2.5, fig.width = 6.5, warning=FALSE, message=FALSE}
+Quanto a variável resposta tempo, conforme a Figura 2, cerca de 88% (250/280) dos indivíduos apresentam um tempo igual ou inferior a 22 dias. Um ponto interessante de se obervar é o fato de que para um tempo superior a 22 dias, apenas 2 dos 30 indivíduos apresentam censura, ou seja, experimentaram o evento de interesse (óbito). Possível notar uma alta taxa de óbito nos primeiros dias de infeção do paciente, que decai com o passar dos dias.
+
+```{r fig2, fig.cap='Distribuição da variável tempo',fig.pos="!h", echo = FALSE, fig.height= 2.2, fig.width = 5, warning=FALSE, message=FALSE}
 plot3 <- ggplot(data = dados, aes(x = tempo, fill = CensuraPlot)) +
   geom_histogram() +
   labs(x = "Tempo", y = "Quantidade") + 
-  labs(fill = "Censura") +
+  labs(fill = "Óbito") +
   scale_fill_manual(values = c("steelblue", "darkgray")) +
   theme_minimal() +
   theme(legend.position = "top") ; plot3
 ```
 
-Quanto a variável resposta tempo, conforme a figura 2, cerca de 88% (250/280) dos indivíduos apresentam um tempo igual ou inferior a 22 dias. Um ponto interessante de se obervar é o fato de que para um tempo superior a 22 dias, apenas 2 dos 30 indivíduos apresentam censura, ou seja, experimentaram o evento de interesse (óbito).
+Dentre as 22 regionais de saúde do Paraná, no banco analisado o maior número de casos foi registrado em União da Vitória com 33% (93/280), seguido de Guarapuava com 23% (65/280) e Irati com 16% (46/280). Os demais foram agrupados na categoria "Outros".
 
-Outro ponto de atenção é a alta incidência de censura para os tempos iniciais. Cerca de 94% das censuras registradas aconteceram para tempos iguais ou inferiores à 10, e apenas 1 censura entre os indivíduos com tempo superior a 40.
-
-Para a regional de saúde em que ocorreu o atendimento, olhando a figura 3 União da vitória com 33% (93/280), foi a regional de saúde com o maior número de ocorrências, e Irati com 16% (46/280) a com o menor número de ocorrências registradas.
-
-```{r fig3, fig.cap='Distribuição da variável regional de saúde',fig.pos="!h", echo = FALSE, fig.height= 2.5, fig.width = 6.5, warning=FALSE, message=FALSE}
-plot4 <- ggplot(data = dados, aes(x = RSRESREG, fill = CensuraPlot)) +
-  geom_bar(width = 0.5) +
+```{r fig3, fig.cap='Distribuição dos casos segundo a regional de saúde',fig.pos="!h", echo = FALSE, fig.height= 2.2, fig.width = 5, warning=FALSE, message=FALSE}
+plot4 <- ggplot(data = dados, aes(x = RSRESR_BACKUP, fill = CensuraPlot)) +
+  geom_bar(width = 0.5, position = "dodge") +
   labs(x = "Regional de saúde", y = "Quantidade") + 
-  labs(fill = "Censura") +
+  labs(fill = "Óbito") +
   scale_fill_manual(values = c("steelblue", "darkgray")) +
   theme_minimal() +
   theme(legend.position = "top") ; plot4
 ```
 
-Quanto as variáveis relacionadas a sintomas, olhando a tabela 1 conseguimos as frequências absolutas e relativas (percentuais) em cada uma das categiorias, bem como as quantidades de falhas (apresentar o evento de interesse óbito) e censura.
+Quanto as variáveis relacionadas a sintomas, na Tabela 1 são apresentadas as frequências absolutas e relativas (percentuais) em cada uma das categorias, bem como o número de óbitos e censuras.
 
-O sintoma que esteve mais presente entre os infectados foi a cefaleia, presente em 242 dos 280 indivíduos, seguido da mialgia em 242. 
+\begin{table}[ht]
+\centering
+\caption{Frequências absolutas, relativas, quantidade de censuras e quantidade de falhas para as variáveis dicotômicas.} 
+\begin{tabular}{lcccccc}
+  \hline
+ & Variável & Freq.Absoluta & Freq.Relativa & Censura & Falha \\ 
+  \hline
+ & Tontura & 162 & 57,50\% & 49 & 113 \\ 
+   & Cefaleia & 242 & 86,43\% & 87 & 155 \\ 
+   & Sangramento Respiratório & 123 & 43,93\% & 78 & 45 \\ 
+   & Dispineia & 199 & 71,07\% & 92 & 107 \\ 
+   & Hipotensão & 148 & 52,86\% & 94 & 54 \\ 
+   & Mialgia & 229 & 81,43\% & 82 & 147 \\ 
+   & Sinais Hemorrágicos &  31 & 11,07\% & 17 & 14 \\ 
+   & Diarreia &  72 & 25,36\% & 27 & 45 \\ 
+   & Respirador Mecânico & 118 & 32,50\% & 73 & 45 \\ 
+   \hline
+\end{tabular}
+\label{tab:classeg}
+\end{table}
 
-O sintomas que se mostraram menos presentes foram os sintomas mais extremos. Sinais hemorrágicos com 31 aparições seguido da diarreia em 71 dos 280 indivíduos.
 
-```{r, echo = FALSE}
-csv <- read.csv("Sintomas.csv", sep = ";", header = TRUE, encoding = "ASCII")
+O sintoma que esteve mais presente entre os infectados foi a cefaleia, presente em 242 dos 280 indivíduos (86%), seguido da mialgia em 232 (83%). 
+
+O sintomas que se mostraram menos presentes foram os sintomas sinais hemorrágicos com 31 aparições seguido da diarreia em 71 dos 280 indivíduos.
+
+Os sintomas que se mostraram mais letais entre os estudados com 94 (33,5%) e 92 (32,8) respectivamente foram hipotensão, que significa uma baixa na pressão arterial do paciente infectado, e dispineia representada pela falta de ar ou dificuldade de respirar.
+
+Na sequência, foi realizada uma análise univariada (uma a uma) das variáveis presentes no estudo. Para isso, foi utilizado o estimador de Kapla-Meier que nos permite visualizar as curvas de sobrevida associadas às categorias de cada variável, auxiliando assim a verificar a existência de associação delas com o tempo até o óbito. 
+
+Buscando oferecer uma melhor visualização dos resultados, os gráficos foram dividos em duas figuras A Figura 4 contém 8 das 14 imagens, e o restante presente na Figura 5. O valor p resultante do teste logrank calculado está presente no canto inferior esquerdo de cada uma das imagens.
+
+Na Figura 4 as variáveis Idade, Sexo, Tontura, Cefaleia, Sangramento Respiratório, Dispeia e Hipotensão se mostraram significativas através do teste *logrank*, com valores p inferiores a 0,10. Embora significativas, as variáveis Sexo e Cefaleia apresentaram um intervalo de confiança bem elevado.
+
+Na Figura 5 as variáveis Respirador Mecânico e Mialgia se mostraram significativas através do teste *logrank*, com valor p inferior a 0,10. As demais 
+
+Feita a análise exploratória dos dados e tendo um intendimento amplo do funcionamento e distribuição de cada uma das variáveis presentes no estudo, o próximo passo foi a modelagem desse dados utilizando do modelo de Fração de Cura.
+
+
+```{r, include= FALSE, message= FALSE, warning= FALSE}
+### Ajustando o modelos com o pacote smcure
+# dados2 contém as variáveis IDADE, SEXOREG, TONTURAREG, CEFALEIAREG, SANGRESREG, DISPNEIAREG, HIPOTENSAOREG, MIALGIASREG, 
+# RSRESREG, SINAISHEMOREG, INTERNACAOREG, EDEMAPULMREG, AUMENTOUREREG
+dados2 <- dados[,c('tempo', 'censura','IDADE_CAT','IDADE', 'SEXO12','TONTURAREG', 
+                    'CEFALEIAREG', 'SANGRESREG', 'DISPNEIAREG','HIPOTENSAOREG',
+                    'MIALGIASREG','RSRESR_BACKUP','RSRESREG1','RSRESREG2','RSRESREG3','SINAISHEMOREG','INTERNACAOREG',
+                    'DIARREIAREG','RESPMECANREG')]
+
+#dados2$SEXO = ifelse(dados2$SEXO12 == 1,'M','F')
+
+dados2$tempo <- as.integer(dados2$tempo)
+dados2$censura <- as.integer(dados2$censura)
+
+str(dados2)
+head(dados2)
+
+
+# Criando um dados3 retirando a obervação com tempo = 80, que atrapalha o Kaplan Meier.
+dados3 <- filter(dados2, tempo <= 70)
+str(dados3)
+
+## Kaplan Meier
+
+list_survplot1 <- list()
+list_survplot2 <- list()
+list_survplot3 <- list()
+list_survplot4 <- list()
+list_survplot5 <- list()
+list_survplot6 <- list()
+list_survplot7 <- list()
+
+# Idade
+ekm <- survfit(Surv(tempo,censura) ~ 1,
+            data=dados3, type=c("kaplan-meier")) 
+list_survplot1[[1]] <- ggsurvplot(ekm, pval = TRUE,
+                ggtheme = theme_minimal()) 
+
+ekm_IDADE_CAT <- survfit(Surv(tempo,censura) ~ IDADE_CAT, data=dados3)
+list_survplot1[[2]] <- ggsurvplot(ekm_IDADE_CAT, pval = TRUE,
+                legend.labs = c("0 a 20 anos", "20 a 29 anos", "30 a 39 anos",
+                "40 a 49 anos", "50 a 59 anos", "Maior ou igual a 60 anos"),
+                ggtheme = theme_minimal()) + ggtitle('Idade')
+
+# Idade
+ekm_SEXO12 <- survfit(Surv(tempo,censura) ~ SEXO12, data=dados3)
+list_survplot2[[1]] <- ggsurvplot(ekm_SEXO12, pval = TRUE,
+                legend.labs = c("F", "M"),
+                conf.int = TRUE,
+                ggtheme = theme_minimal()) + ggtitle('Sexo')
+
+# TONTURAREG
+ekm_TONTURAREG <- survfit(Surv(tempo,censura) ~ TONTURAREG, data=dados3)
+list_survplot2[[2]] <-ggsurvplot(ekm_TONTURAREG, pval = TRUE,
+                legend.labs = c("N", "S"),
+                conf.int = TRUE,
+                ggtheme = theme_minimal()) + ggtitle('Tontura')
+
+# CEFALEIAREG
+ekm_CEFALEIAREG <- survfit(Surv(tempo,censura) ~ CEFALEIAREG, data=dados3)
+list_survplot3[[1]] <- ggsurvplot(ekm_CEFALEIAREG, pval = TRUE,
+                legend.labs = c("N", "S"),
+                conf.int = TRUE,
+                ggtheme = theme_minimal()) + ggtitle('Cefaleia')
+
+# SANGRESREG
+ekm_SANGRESREG <- survfit(Surv(tempo,censura) ~ SANGRESREG, data=dados3)
+list_survplot3[[2]] <- ggsurvplot(ekm_SANGRESREG, pval = TRUE,
+                legend.labs = c("N", "S"),
+                conf.int = TRUE,
+                ggtheme = theme_minimal()) + ggtitle('Sangramento Respiratório')
+
+# DISPNEIAREG
+ekm_DISPNEIAREG <- survfit(Surv(tempo,censura) ~ DISPNEIAREG, data=dados3)
+list_survplot4[[1]] <- ggsurvplot(ekm_DISPNEIAREG, pval = TRUE,
+                legend.labs = c("N", "S"),
+                conf.int = TRUE,
+                ggtheme = theme_minimal()) + ggtitle('Dispneia')
+
+# HIPOTENSAOREG
+ekm_HIPOTENSAOREG <- survfit(Surv(tempo,censura) ~ HIPOTENSAOREG, data=dados3)
+list_survplot4[[2]] <- ggsurvplot(ekm_HIPOTENSAOREG, pval = TRUE,
+                legend.labs = c("N", "S"),
+                conf.int = TRUE,
+                ggtheme = theme_minimal()) + ggtitle('Hipotensão')
+
+# MIALGIASREG
+ekm_MIALGIASREG <- survfit(Surv(tempo,censura) ~ MIALGIASREG, data=dados3)
+list_survplot5[[1]] <- ggsurvplot(ekm_MIALGIASREG, pval = TRUE,
+                legend.labs = c("N", "S"),
+                conf.int = TRUE,
+                ggtheme = theme_minimal()) + ggtitle('Mialgia')
+
+# RSRESR_BACKUP
+ekm_RSRESR_BACKUP <- survfit(Surv(tempo,censura) ~ RSRESR_BACKUP, data=dados3)
+list_survplot5[[2]] <- ggsurvplot(ekm_RSRESR_BACKUP, pval = TRUE,
+                legend.labs = c("Guarapuava", "Irati", "Outros","União da Vitória"),
+                ggtheme = theme_minimal()) + ggtitle('Regional de Saúde')
+
+# SINAISHEMOREG
+ekm_SINAISHEMOREG <- survfit(Surv(tempo,censura) ~ SINAISHEMOREG, data=dados3)
+list_survplot6[[1]] <- ggsurvplot(ekm_SINAISHEMOREG, pval = TRUE,
+                legend.labs = c("N", "S"),
+                conf.int = TRUE,
+                ggtheme = theme_minimal()) + ggtitle('Sinais Hemorrágicos')
+
+# INTERNACAOREG
+ekm_INTERNACAOREG <- survfit(Surv(tempo,censura) ~ INTERNACAOREG, data=dados3)
+list_survplot6[[2]] <- ggsurvplot(ekm_INTERNACAOREG, pval = TRUE,
+                legend.labs = c("N", "S"),
+                conf.int = TRUE,
+                ggtheme = theme_minimal()) + ggtitle('Internação')
+
+# DIARREIAREG
+ekm_DIARREIAREG <- survfit(Surv(tempo,censura) ~ DIARREIAREG, data=dados3)
+list_survplot7[[1]] <- ggsurvplot(ekm_DIARREIAREG, pval = TRUE,
+                legend.labs = c("N", "S"),
+                conf.int = TRUE,
+                ggtheme = theme_minimal()) + ggtitle('Diarreia')
+
+# RESPMECANREG
+ekm_RESPMECANREG <- survfit(Surv(tempo,censura) ~ RESPMECANREG, data=dados3)
+list_survplot7[[2]] <- ggsurvplot(ekm_RESPMECANREG, pval = TRUE,
+                legend.labs = c("N", "S"),
+                conf.int = TRUE,
+                ggtheme = theme_minimal()) + ggtitle('Respirador Mecânico')
 ```
 
 
-```{r, results='asis'}
-xtable(csv, caption =
-               "Classes gramaticais das palavras presentes na fala dos indivíduos, considerando os grupos de interesse.",
-       label = "tab:classeg")
-       #, align = "lccccc")
+\newpage
+
+```{r, fig.pos="!h", echo = FALSE, fig.height= 2.5, fig.width = 6, warning=FALSE, message=FALSE}
+arrange_ggsurvplots(list_survplot1, print = TRUE, ncol = 2, nrow = 1)
 ```
+
+```{r, fig.pos="!h", echo = FALSE, fig.height= 2.5, fig.width = 6, warning=FALSE, message=FALSE}
+arrange_ggsurvplots(list_survplot2, print = TRUE, ncol = 2, nrow = 1)
+```
+
+```{r, fig.pos="!h", echo = FALSE, fig.height= 2.5, fig.width = 6, warning=FALSE, message=FALSE}
+arrange_ggsurvplots(list_survplot3, print = TRUE, ncol = 2, nrow = 1)
+```
+
+```{r fig4, fig.cap='Curvas de Sobrevivência univariada para o estimador de Kaplan Meier', fig.pos="!h", echo = FALSE, fig.height= 2.5, fig.width = 6, warning=FALSE, message=FALSE}
+arrange_ggsurvplots(list_survplot4, print = TRUE, ncol = 2, nrow = 1)
+```
+
+\newpage
+
+```{r, fig.pos="!h", echo = FALSE, fig.height= 2.5, fig.width = 6, warning=FALSE, message=FALSE}
+arrange_ggsurvplots(list_survplot5, print = TRUE, ncol = 2, nrow = 1)
+```
+
+```{r, fig.pos="!h", echo = FALSE, fig.height= 2.5, fig.width = 6, warning=FALSE, message=FALSE}
+arrange_ggsurvplots(list_survplot6, print = TRUE, ncol = 2, nrow = 1)
+```
+
+```{r fig5, fig.cap='Curvas de Sobrevivência univariada para o estimador de Kaplan Meier',fig.pos="!h", echo = FALSE, fig.height= 2.5, fig.width = 6, warning=FALSE, message=FALSE}
+arrange_ggsurvplots(list_survplot7, print = TRUE, ncol = 2, nrow = 1)
+```
+
+\newpage
+
+
+## Modelo de Fração de Cura
+
+Os dados foram aplicados no modelo de fração de cura através do pacote *smcure*, considerando as covariáveis: Idade, sexo, tontura, cefaleia, sangramento respiratório, dispinéia, hipotensão, mialgia, regional de saúde, sinais hemorrágicos, internação, diarreia e respirador mecânico.
+
+As variáveis dicotômicas foram introduzidas ao modelos por meio de variáveis dummy, onde a primeira categoria de cada uma delas ficou como referência. O pacote utilizado para a modelagem apresenta uma particularidade para variáveis categóricas com mais de duas categorias, fazendo necessária a criação de k-1 variáveis dummy, onde *k* é o número de categorias da variável, portanto, para as variável *regional de saúde* 3 variáveis dummy foram adicionadas aos ddados.
+
+Na primeira etapa, foi ajustado um modelo separado para cada variável selecionada, avaliando as suas respectivas significâncias ao nível de 0,10.
+
+Na Tabela 2, podemos observar as estimativas para cada um dos modelos, tanto para a probabilidade de cura quanto para o tempo de falha respectivamente, bem como os respectivos erros padrão e valores de p. Para a variável regional de saúde, a categoria "Guarapuava" ficou como categoria de referência.
+
+Os erros padrões estimados foram obtidos baseados em 200 amostras de bootstrap. A escolha desse tamanho de amostra foi baseado em outros materias e referências utilizadas pelo autor deste trabalho durante o processo de estudo do trabalho.
+
+
+
+\begin{landscape} 
+\begin{table}[ht]
+\centering
+\caption{Estimativas, coeficientes, erros padrões e p-valores para cada um dos modelos com uma variável.} 
+\begin{tabular}{lcccccccc}
+  \hline
+ & & & & Probabilidade de óbito & & & Tempo de falha & - \\ 
+  \hline
+ & Parâmetro & Categoria & Coeficiente & Erro Padrão & Valor-p & Coeficiente & Erro Padrão & Valor-p \\ 
+  \hline
+   & Idade & - & -0,005 & 0,156 & 0,768 & -0,122 & 0,009 & 0,19 \\ 
+   & Sexo & Masculino & -1,915 & 0,612 & 0,001 & -0,173 & 0,612 & 0,001 \\ 
+   & Tontura & Sim & -1,13 & 0,439 & 0,001 & -0,438 & 0,239 & 0,067 \\ 
+   & Cefaleia & Sim & -1,395 & 1,262 & 0,268 & -0,253 & 0,322 & 0,432 \\ 
+   & Sangramento Respiratório & Sim & 1,997 & 0,491 & 0,001 & 1,092 & 0,322 & 0,001 \\ 
+   & Dispineia & Sim & 2,923 & 0,462 & 0,001 & 0,053 & 0,362 & 0,883 \\ 
+   & Hipotensão & Sim & 6,673 & 0,576 & 0,001 & 0,402 & 0,298 & 0,177 \\ 
+   & Mialgia & Sim & -0,189 & 0,478 & 0,001 & -0,498 & 0,338 & 0,14 \\ 
+   & Regional de Saúde & Irati & 0,983 & 0,651 & 0,001 & -0,954 & 0,505 & 0,058 \\ 
+   & - & Outros & 0,242 & 0,523 & 0,001 & -0,88 & 0,49 & 0,072 \\ 
+   & - & União da Vitória & 2,297 & 0,626 & 0,001 & -0,79 & 0,581 & 0,174 \\ 
+   & Sinais Hemorrágicos & Sim & 4,469 & 2,566 & 0,001 & -0,045 & 0,342 & 0,896 \\ 
+   & Internação & Sim & 2,489 & 0,76 & 0,001 & -1,531 & 0,67 & 0,224 \\ 
+   & Diarreia & Sim & -1,636 & 0,391 & 0,001 & 0,943 & 0,29 & 0,001 \\ 
+   & Respirador Mecânico & Sim & 7,394 & 0,585 & 0,001 & -0,741 & 0,27 & 0,006 \\ 
+   \hline
+\end{tabular}
+\label{tab:class}
+\end{table}
+\end{landscape}
+
+
+
+Ajustado um modelo para cada uma das variáveis selecionadas na seção 5.1, para a probabilidade de óbito 12 variáveis se mostraram significativas ao nível de 10% de confiança, fora elas Sexo, Tontura, Sagramento Respiratório, Dispinéia, Hipotensão, Mialgia, Regional de Saúde, Sinais Hemorrágicos, Internação, Diarreia e Respirador Mecânico.
+
+Para o tempo de falha, as variáveis que se mostraram significativas ao nível de 10% de confiança foram Sexo, Tontura, Sangramento Respiratório, Regional de Saúde para os níveis Irati e Outros, Diarréia e Respirador Mecânico. Olhando para a variável sangramento respiratório como exemplo, olhando para o coeficiente concluímos que pacientes que apresentaram esse sintoma tem um aumento no tempo médio de falha.
+
+Na segunda etapa, foi ajustado um modelo com todas as covariáveis, novamente avaliando as que são siignificativas ao de significância de 0,10. A partir da Tabela 3 observam-se as estimativas associadas ao modelo de fração de cura.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

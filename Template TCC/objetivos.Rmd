@@ -1,11 +1,11 @@
 ## Objetivo Geral
 
-O presente estudo tem como objetivo estudar o tempo até a cura ou óbito, de um paciente infectado Hantavirose no Estado do Paraná no período de 1992 a 2016.
+O presente estudo tem como objetivo estudar fatores associados ao tempo de cura ou óbito, de pacientes infectados Hantavirose no Estado do Paraná no período de 1992 a 2016.
 
 ## Objetivos Específicos
 
 a. Revisar a literatura no que diz respeito às abordagens propostas para Análise de Sobrevivência;
 b. Revisar os pacotes disponíveis no software R (cite r) para estimação e diagnóstico de uma modelagem usando Análise de Sobrevivência fazendo uso dos pacotes survival (cite survival) e smcure (cite smcure);
 c. Realizar uma análise descritiva dos dados descritos na Seção 3.1.1 para entendimento mais detalhado e consistente das informações;
-d. Com base nos dados obtidos do banco de monitoramento da Secretaria de Estado da Saúde do Paraná (SESA/PR), realizar uma modelagem usando Análise de Sobrevivência em busca de definir os fatos causadores do óbito ou cura de um paciente infectado por Hantavirose.
+d. Com base nos dados obtidos do banco de monitoramento da Secretaria de Estado da Saúde do Paraná (SESA/PR), realizar uma modelagem usando Análise de Sobrevivência em busca de definir os fatores associados ao óbito ou cura de um paciente infectado por Hantavirose.
 e. Apresentar o modelo, discutir os resultados obtidos e tirar conclusões.

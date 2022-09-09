@@ -1,3 +1,17 @@
-Digite aqui sua revisão de literatura.
+A hantavirose é uma doença grave e aguda, com alta taxa de letalidade, cujo nome tem origem no rio “Hantan” na Coréia, onde vários soldados americanos adoeceram durante a guerra dos anos 50. A doença manifesta-se sob a forma renal, com febre hemorrágica, e sob a forma pulmonar \cite{ambienteBrasil}.
 
-Veja como fazer citações na introdução.
+A Hantavirose é uma das zoonoses que vem preocupando as autoridades sanitárias de todo o mundo. Sua ocorrência se deve principalmente a distúrbios ecológicos, destacando-se desmatamentos, alterações em ecossistemas associados ao comportamento econômico, social e cultural do homem. 
+
+A virose surge como um importante problema de saúde pública tanto em zonas rurais como em zonas urbanas \cite{ambienteBrasil}.
+
+Atualmente, a hantavirose distribui-se globalmente incluindo a Europa, a Ásia, África e Américas. Na América do Sul, os países mais afetados são Brasil, Argentina, Chile e Paraguai \cite{Kruger2015}.
+
+Com o agravamento do número de casos dessa zoonose ao redor do mundo se faz necessário utilizar métodos capazes de entender os fatores de risco para o óbito dessa doença.
+
+A análise de sobrevivência é uma das áreas da estatística que mais cresceu nas últimas décadas do século passado. A razão deste crescimento é o desenvolvimento e aprimoramento de técnicas estatísticas combinado com computadores cada vez mais velozes. Uma evidência quantitativa deste sucesso é o número de aplicações de análise de sobrevivência em medicina \cite{book}.
+
+O termo análise de sobrevivência refere-se basicamente a situações médicas envolvendo dados censurados (observação parcial da resposta). Entretando, condições similares ocorrem em outras áreas que usam as mesmas técnicas de análise de dados \cite{book}.
+
+A grande vantagem da Análise de Sobrevivência é permitir utilizar a informação de todos os participantes até o momento que experimentam o evento final, ou são censurados. Assim, essa é a técnica ideal para analisar respostas binárias (ter ou não ter um evento), em estudos longitudinais. Portando esse tipo de análise, compara a rapidez com que os participantes desenvolvem determinado evento, ao contrário, de comparar as porcentagens de observações que o desenvolvem ao fim do período \cite{Botelho}.
+
+Com a evolução da medicina, doenças antes letais tem se tornado curáveis. Tal fato aumentou a necessidade de desenvolver modelos estatísticos capazes de analisar quando o tratamento é capaz de curar a doença ou retardar a progressão caso seja não curável. O modelo de fração de cura, primeiramente introduzido por Boag, Berkson e Gage (1952), é um dos mais populares modelos para estimar a taxa de cura do tratamento e a taxa de sobrevivência de pacientes não curado ao mesmo tempo \cite{Cai2012}.

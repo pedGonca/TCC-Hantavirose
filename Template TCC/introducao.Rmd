@@ -1,6 +1,6 @@
-A hantavirose, zoonose viral aguda, cuja infecção em humanos no Brasil, se apresenta na forma da Síndrome Cardiopulmonar por Hantavírus, apresentou seus primeiros casos registrados em 1993, e desde então diversos outros estados tem sido comfirmados em todas as regiões do país.
+A hantavirose, zoonose viral aguda, cuja infecção em humanos no Brasil, se apresenta na forma da Síndrome Cardiopulmonar por Hantavírus, apresentou seus primeiros casos registrados em 1993, e desde então tem sido notificada em todas as regiões do país.
 
-Uma zoonose é uma doença infecciosa que saltou de um animal não humano para humanos. Os patógenos zoonóticos podem ser bacterianos, virais ou parasitários, ou podem envolver agentes não convencionais, se espalhando assim para humanos por contato direto ou por meio de alimentos, água ou meio ambiente. Eles representam um grande problema de saúde pública em todo o mundo devido à nossa estreita relação com os animais, seja na agricultura, como companheiros ou no ambiente natural \cite{OMS_zoonoses}.
+Zoonoses são doenças infecciosas que saltam de animais não humano para humanos. Os patógenos zoonóticos podem ser bacterianos, virais ou parasitários, ou podem envolver agentes não convencionais, se espalhando assim para humanos por contato direto ou por meio de alimentos, água ou meio ambiente. Eles representam um grande problema de saúde pública em todo o mundo devido à nossa estreita relação com os animais, seja na agricultura, como companheiros ou no ambiente natural \cite{OMS_zoonoses}.
 
 A transmissão da hantavirose é feita por roedores. O mais comum é que o contágio ocorra diretamente pela inalação de partículas de urina, fezes e saliva de roedores silvestres, não pelo contato com outros humanos infectados. Por isso, os casos da doença costumam ser isolados. Diferentemente dos seres humanos, roedores, como ratos e ratazanas, podem carregar o hantavírus por toda a vida sem adoecer \cite{bbc}.
 
@@ -8,7 +8,9 @@ Quando olhamos os dados relacionados a essa zoonose, de 2007 a 2015, foram notif
 
 Segundo a OMS, não há nenhum tratamento, cura ou vacina para a infecção. A alta taxa de mortalidade e dificuldade com o tratamento são fatores que juntamente com a não descoberta de um tratamento tem aumentado a preocupação com a doença que desafia as autoridades de saúde pública ao redor do mundo. As alternativas terapêuticas para os indivíduos infectados limitam-se à introdução de medidas de suporte na fase aguda em ambiente hospitalar, preferivelmente em UTIs.
 
-Dadas as circunstâncias, este presente trabalho de conclusão de curso tem como finalidade estender o trabalho realizado pela DANIELE AKEMI ARITA (cite dani), utilizando os mesmos dados e buscando analisar a sobrevida desses pacientes diagnosticados com hantavirose. 
+Dadas as circunstâncias, este presente trabalho de conclusão de curso tem como finalidade estender o trabalho realizado pela Daniele Akemi Aritra \cite{Arita2019}, utilizando os mesmos dados e buscando analisar a sobrevida desses pacientes diagnosticados com hantavirose. 
+
+\newpage
 
 Dado o fato de que nem todos indivíduos do estudo experimentaram o evento de interesse (isto é, não foram a óbito devido à contaminação da hantavirose) até o termino do estudo, é proposta a utilização do modelo de sobrevivência com fração de cura apresentado por \citeonline{cureModels}, para analisar a sobrevida desses pacientes, onde a variável resposta é o tempo decorrido entre a data do primeiro sintoma do paciente e a data em que o mesmo foi levado a óbito.
 
