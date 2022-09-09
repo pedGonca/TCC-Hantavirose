@@ -82,26 +82,27 @@ Devido a presença de dados faltantes para várias variáveis, com algumas ating
 4. Tontura: Apresentou tontura (sim ou não).
 5. Cefaleia: Apresentou cefaleia (sim ou não). 
 6. Sangramento Respiratório: Apresentou sangramento respiratório (sim ou não).
-7. Dispineia: Apresentou falta de ar (sim ou não).
+7. Dispneia: Apresentou falta de ar (sim ou não).
 8. Hipotensão: Apresentou problemas com pressão baixa (sim ou não).
 9. Mialgia: Apresentou dores musculares (sim ou não).
 10. Regional de Saúde: Regional de saúde na qual o paciente foi atendido, podendo ser União da vitória, Guarapuava, Irati e Outros (sim ou não).
 11. Sinais Hemorrágicos: Apresentou sinais hemorrágicos (sim ou não).
-12. Internação: Paciente foi internado no periodo em que esteve com a doença (sim ou não).
+12. Internação: Paciente foi internado no período em que esteve com a doença (sim ou não).
 13. Diarreia: Apresentou diarreia (sim ou não).
 14. Respirador Mecânico: Precisou de respirador mecânico (sim ou não).
 
-Para fins de visualização e melhor intendimento da variável, entendeu-se que seria adequado categorizar a variável *idade* para a análise exploratória, entre indivíduos de 1 a 20 anos de idade, 20 a 29, 30 a 39, 40 a 49, 50 a 59 e com idade superior a 60 anos.
+Para fins de visualização e melhor entendimento da variável, entendeu-se que seria adequado categorizar a variável *idade* para a análise exploratória, entre indivíduos de 1 a 20 anos de idade, 20 a 29, 30 a 39, 40 a 49, 50 a 59 e com idade superior a 60 anos.
 
-Conforme já foi discutido anteriormente na seção 4.2.1.3, em análise de sobrevivência, as censuras são compostas por indivíduos do estudo que ainda não experimentaram o evento final, portanto, além das 14 variáveis escolhidas, ainda foi adicionada a variável de censura, onde o indíviduo que apresentou censura é *0* e *1* para o indivíduo não censurado.
+Conforme já foi discutido anteriormente na seção 4.2.1.3, em análise de sobrevivência, as censuras são compostas por indivíduos do estudo que ainda não experimentaram o evento final, portanto, além das 14 variáveis escolhidas, ainda foi adicionada a variável de censura, onde o indivíduo que apresentou censura é *0* e *1* para o indivíduo não censurado.
 
-## Analise Descritiva
+## Análise Descritiva
 
 Inicialmente, foi realizada uma análise descritiva dos dados apresentados na Seção 5.1 a fim de analisar a quantidade de indivíduos em cada categoria das variáveis.
 
 Visando entender o comportamento das variáveis assim como a distribuição entre a censura, as visualizações para as variáveis foram feitas distinguindo entre censura sim e não.
 
 Na Figura 1, conseguimos analisar a distribuição e comportamento das variáveis idade e sexo, além de suas respectivas censuras.
+
 
 ```{r fig1, fig.cap='Distribuição das variáveis Idade e Sexo',fig.pos="!h", echo = FALSE, fig.height= 3.6, fig.width = 6.4}
 
@@ -130,7 +131,8 @@ Dos 280 indivíduos presentes no estudo, 85,0% (238/280) eram do sexo masculino 
 
 Entre as categorias da variável idade, 32% (88/280) estão presentes na categoria de indivíduos de 30 a 39 anos, e apenas 3% (9/280) dos indivíduos do estudo presentes na categoria de 60 ou mais anos de idade.
 
-Quanto a variável resposta tempo, conforme a Figura 2, cerca de 88% (250/280) dos indivíduos apresentam um tempo igual ou inferior a 22 dias. Um ponto interessante de se obervar é o fato de que para um tempo superior a 22 dias, apenas 2 dos 30 indivíduos apresentam censura, ou seja, experimentaram o evento de interesse (óbito). Possível notar uma alta taxa de óbito nos primeiros dias de infeção do paciente, que decai com o passar dos dias.
+Quanto a variável resposta tempo, conforme a Figura 2, cerca de 88% (250/280) dos indivíduos apresentam um tempo igual ou inferior a 22 dias. Um ponto interessante de se observar é o fato de que para um tempo superior a 22 dias, apenas 2 dos 30 indivíduos apresentam censura, ou seja, experimentaram o evento de interesse (óbito). Possível notar uma alta taxa de óbito nos primeiros dias de infeção do paciente, que decai com o passar dos dias.
+
 
 ```{r fig2, fig.cap='Distribuição da variável tempo',fig.pos="!h", echo = FALSE, fig.height= 2.2, fig.width = 5, warning=FALSE, message=FALSE}
 plot3 <- ggplot(data = dados, aes(x = tempo, fill = CensuraPlot)) +
@@ -180,19 +182,20 @@ Quanto as variáveis relacionadas a sintomas, na Tabela 1 são apresentadas as f
 
 O sintoma que esteve mais presente entre os infectados foi a cefaleia, presente em 242 dos 280 indivíduos (86%), seguido da mialgia em 232 (83%). 
 
-O sintomas que se mostraram menos presentes foram os sintomas sinais hemorrágicos com 31 aparições seguido da diarreia em 71 dos 280 indivíduos.
+Os sintomas que se mostraram menos presentes foram os sintomas sinais hemorrágicos com 31 aparições seguido da diarreia em 71 dos 280 indivíduos.
 
-Os sintomas que se mostraram mais letais entre os estudados com 94 (33,5%) e 92 (32,8) respectivamente foram hipotensão, que significa uma baixa na pressão arterial do paciente infectado, e dispineia representada pela falta de ar ou dificuldade de respirar.
+Os sintomas que se mostraram mais letais entre os estudados com 94 (33,5%) e 92 (32,8) respectivamente foram hipotensão, que significa uma baixa na pressão arterial do paciente infectado, e dispneia representada pela falta de ar ou dificuldade de respirar.
 
-Na sequência, foi realizada uma análise univariada (uma a uma) das variáveis presentes no estudo. Para isso, foi utilizado o estimador de Kapla-Meier que nos permite visualizar as curvas de sobrevida associadas às categorias de cada variável, auxiliando assim a verificar a existência de associação delas com o tempo até o óbito. 
+Na sequência, foi realizada uma análise uni variada (uma a uma) das variáveis presentes no estudo. Para isso, foi utilizado o estimador de Kaplan-Meier que nos permite visualizar as curvas de sobrevida associadas às categorias de cada variável, auxiliando assim a verificar a existência de associação delas com o tempo até o óbito. 
 
-Buscando oferecer uma melhor visualização dos resultados, os gráficos foram dividos em duas figuras A Figura 4 contém 8 das 14 imagens, e o restante presente na Figura 5. O valor p resultante do teste logrank calculado está presente no canto inferior esquerdo de cada uma das imagens.
+Buscando oferecer uma melhor visualização dos resultados, os gráficos foram divididos em duas figuras A Figura 4 contém 8 das 14 imagens, e o restante presente na Figura 5. O valor p resultante do teste logrank calculado está presente no canto inferior esquerdo de cada uma das imagens.
 
-Na Figura 4 as variáveis Idade, Sexo, Tontura, Cefaleia, Sangramento Respiratório, Dispeia e Hipotensão se mostraram significativas através do teste *logrank*, com valores p inferiores a 0,10. Embora significativas, as variáveis Sexo e Cefaleia apresentaram um intervalo de confiança bem elevado.
+Na Figura 4 as variáveis Idade, Sexo, Tontura, Cefaleia, Sangramento Respiratório, Dispneia e Hipotensão se mostraram significativas através do teste *logrank*, com valores p inferiores a 0,10. Embora significativas, as variáveis Sexo e Cefaleia apresentaram um intervalo de confiança bem elevado.
 
 Na Figura 5 as variáveis Respirador Mecânico e Mialgia se mostraram significativas através do teste *logrank*, com valor p inferior a 0,10. As demais 
 
-Feita a análise exploratória dos dados e tendo um intendimento amplo do funcionamento e distribuição de cada uma das variáveis presentes no estudo, o próximo passo foi a modelagem desse dados utilizando do modelo de Fração de Cura.
+Feita a análise exploratória dos dados e tendo um entendimento amplo do funcionamento e distribuição de cada uma das variáveis presentes no estudo, o próximo passo foi a modelagem desses dados utilizando do modelo de Fração de Cura de Riscos Proporcionais.
+
 
 
 ```{r, include= FALSE, message= FALSE, warning= FALSE}
@@ -361,20 +364,27 @@ arrange_ggsurvplots(list_survplot7, print = TRUE, ncol = 2, nrow = 1)
 
 ## Modelo de Fração de Cura
 
-Os dados foram aplicados no modelo de fração de cura através do pacote *smcure*, considerando as covariáveis: Idade, sexo, tontura, cefaleia, sangramento respiratório, dispinéia, hipotensão, mialgia, regional de saúde, sinais hemorrágicos, internação, diarreia e respirador mecânico.
+Os dados foram aplicados no modelo de fração de cura através do pacote *smcure*, considerando as covariáveis: Idade, sexo, tontura, cefaleia, sangramento respiratório, dispneia, hipotensão, mialgia, regional de saúde, sinais hemorrágicos, internação, diarreia e respirador mecânico.
 
-As variáveis dicotômicas foram introduzidas ao modelos por meio de variáveis dummy, onde a primeira categoria de cada uma delas ficou como referência. O pacote utilizado para a modelagem apresenta uma particularidade para variáveis categóricas com mais de duas categorias, fazendo necessária a criação de k-1 variáveis dummy, onde *k* é o número de categorias da variável, portanto, para as variável *regional de saúde* 3 variáveis dummy foram adicionadas aos ddados.
+As variáveis dicotômicas foram introduzidas aos modelos por meio de variáveis dummy, onde a primeira categoria de cada uma delas ficou como referência. O pacote utilizado para a modelagem apresenta uma particularidade para variáveis categóricas com mais de duas categorias, fazendo necessária a criação de k-1 variáveis dummy, onde *k* é o número de categorias da variável, portanto, para a variável *regional de saúde* 3 variáveis dummy foram adicionadas aos dados.
 
 Na primeira etapa, foi ajustado um modelo separado para cada variável selecionada, avaliando as suas respectivas significâncias ao nível de 0,10.
 
 Na Tabela 2, podemos observar as estimativas para cada um dos modelos, tanto para a probabilidade de cura quanto para o tempo de falha respectivamente, bem como os respectivos erros padrão e valores de p. Para a variável regional de saúde, a categoria "Guarapuava" ficou como categoria de referência.
 
-Os erros padrões estimados foram obtidos baseados em 200 amostras de bootstrap. A escolha desse tamanho de amostra foi baseado em outros materias e referências utilizadas pelo autor deste trabalho durante o processo de estudo do trabalho.
+Os erros padrões estimados foram obtidos baseados em 200 amostras de bootstrap. A escolha desse tamanho de amostra foi baseada em outros materiais e referências utilizadas pelo autor deste trabalho durante o processo de estudo do trabalho.
 
+Ajustado um modelo para cada uma das variáveis selecionadas na seção 5.1, para a probabilidade de óbito 12 variáveis se mostraram significativas ao nível de 10% de confiança, fora elas Sexo, Tontura, Sangramento Respiratório, Dispneia, Hipotensão, Mialgia, Regional de Saúde, Sinais Hemorrágicos, Internação, Diarreia e Respirador Mecânico.
+
+Para o tempo de falha, as variáveis que se mostraram significativas ao nível de 10% de confiança foram Sexo, Tontura, Sangramento Respiratório, Regional de Saúde para os níveis Irati e Outros, Diarreia e Respirador Mecânico. Olhando para a variável sangramento respiratório como exemplo, olhando para o coeficiente concluímos que pacientes que apresentaram esse sintoma tem um aumento no tempo médio de falha.
+
+Na segunda etapa, foi ajustado um modelo com todas as variáveis, novamente avaliando as que são significativas ao nível de significância de 0,10. As que apresentaram um nível de significância abaixo do estabelecido foram retiradas do modelo. Conforme mencionado na seção 4.2.3.1, importante lembrar que uma mesma covariável pode ser utilizada tanto para modelar o óbito quanto para modelar o tempo de falha, da mesma forma que uma covariável pode ser significativa para explicar o óbito, mas não significativa para explicar o tempo de falha e vice-versa.
+
+A partir da Tabela 3 observam-se as estimativas dadas pelos modelos apenas com as variáveis significativas para o explicar o óbito e o tempo de falha respectivamente.
 
 
 \begin{landscape} 
-\begin{table}[ht]
+\begin{table}[h!]
 \centering
 \caption{Estimativas, coeficientes, erros padrões e p-valores para cada um dos modelos com uma variável.} 
 \begin{tabular}{lcccccccc}
@@ -388,7 +398,7 @@ Os erros padrões estimados foram obtidos baseados em 200 amostras de bootstrap.
    & Tontura & Sim & -1,13 & 0,439 & 0,001 & -0,438 & 0,239 & 0,067 \\ 
    & Cefaleia & Sim & -1,395 & 1,262 & 0,268 & -0,253 & 0,322 & 0,432 \\ 
    & Sangramento Respiratório & Sim & 1,997 & 0,491 & 0,001 & 1,092 & 0,322 & 0,001 \\ 
-   & Dispineia & Sim & 2,923 & 0,462 & 0,001 & 0,053 & 0,362 & 0,883 \\ 
+   & Dispneia & Sim & 2,923 & 0,462 & 0,001 & 0,053 & 0,362 & 0,883 \\ 
    & Hipotensão & Sim & 6,673 & 0,576 & 0,001 & 0,402 & 0,298 & 0,177 \\ 
    & Mialgia & Sim & -0,189 & 0,478 & 0,001 & -0,498 & 0,338 & 0,14 \\ 
    & Regional de Saúde & Irati & 0,983 & 0,651 & 0,001 & -0,954 & 0,505 & 0,058 \\ 
@@ -404,14 +414,59 @@ Os erros padrões estimados foram obtidos baseados em 200 amostras de bootstrap.
 \end{table}
 \end{landscape}
 
+Para chegar nesse modelo final as variáveis foram introduzidas uma a uma, avaliando seu efeito e significância para o modelo.
+
+Para a probabilidade de óbito as variáveis que restaram foram Sexo, Tontura, Sangramento Respiratório, Sinais hemorrágicos e Cefaleia. 
 
 
-Ajustado um modelo para cada uma das variáveis selecionadas na seção 5.1, para a probabilidade de óbito 12 variáveis se mostraram significativas ao nível de 10% de confiança, fora elas Sexo, Tontura, Sagramento Respiratório, Dispinéia, Hipotensão, Mialgia, Regional de Saúde, Sinais Hemorrágicos, Internação, Diarreia e Respirador Mecânico.
+\begin{table}[h!]
+\centering
+\caption{Estimativas para a probabilidade de óbito do modelo final.} 
+\begin{tabular}{lcccccccc}
+  \hline
+ & Parâmetro & Categoria & Coeficiente \\ 
+  \hline
+   & Sexo & Masculino & -1,358 \\ 
+   & Tontura & Sim & -0,886 \\ 
+   & Sangramento Respiratório & Sim & 2,299 \\ 
+   & Sinais Hemorrágicos & Sim & 1,187 \\ 
+   & Cefaleia & Sim & -0,499 \\ 
+   \hline
+\end{tabular}
+\label{tab:modelc}
+\end{table}
 
-Para o tempo de falha, as variáveis que se mostraram significativas ao nível de 10% de confiança foram Sexo, Tontura, Sangramento Respiratório, Regional de Saúde para os níveis Irati e Outros, Diarréia e Respirador Mecânico. Olhando para a variável sangramento respiratório como exemplo, olhando para o coeficiente concluímos que pacientes que apresentaram esse sintoma tem um aumento no tempo médio de falha.
 
-Na segunda etapa, foi ajustado um modelo com todas as covariáveis, novamente avaliando as que são siignificativas ao de significância de 0,10. A partir da Tabela 3 observam-se as estimativas associadas ao modelo de fração de cura.
+As que apresentaram um coeficiente negativo, ou seja, diminuem a probabilidade de óbito são Sexo (masculino), tontura e cefaleia. As demais apresentaram um coeficiente positivo.
 
+Conforme apresentado na seção 4.2.3, a probabilidade de óbito pode ser calculada baseada nos resultados da parte de probabilidade de Cura do modelo. Para um indivíduo do Sexo masculino, que apresentou todos os sintomas da Tabela 3, a probabilidade de cura é dada por:
+
+$$
+\pi(z) = 1 - \frac{exp(\textbf{bz})}{1+exp(\textbf{bz})} = 0,082
+$$
+
+
+Para o tempo de falha restaram Sexo, Sinais hemorrágicos, Respirador Mecânico, Cefaleia e Hipotensão.
+
+
+\begin{table}[h!]
+\centering
+\caption{Estimativas para o tempo de falha do modelo final.}
+\begin{tabular}{lcccccccc}
+  \hline
+ & Parâmetro & Categoria & Coeficiente \\ 
+  \hline
+   & Sexo & Masculino & -0,002 \\ 
+   & Sinais Hemorrágicos & Sim & -0,349 \\ 
+   & Respirador Mecânico & Sim & 0,048 \\ 
+   & Cefaleia & Sim & -0,020 \\ 
+   & Hipotensão & Sim & 1,595 \\ 
+   \hline
+\end{tabular}
+\label{tab:modelf}
+\end{table}
+
+Das variáveis presentes para explicar o tempo de falha Respirador Mecânico e Hipotensão apresentam um coeficiente positivo, ou seja, aumentam a probabilidade de o indivíduo apresentar a falha, enquanto as demais apresentaram um coeficiente negativo.
 
 
 

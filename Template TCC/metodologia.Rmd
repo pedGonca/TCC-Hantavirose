@@ -2,9 +2,9 @@
 
 ### Conjunto de dados
 
-O conjunto de dados composto por 280 indivíduos e 69 variáveis utilizado é proveniente do Sistema de Informação de Agravos de Notificação (SINAN), onde para todos os indivíduos presentes na base, as informações referentes foram retiradas da ficha de investigação, onde cada um dos 69 campos presentes na ficha foram preenchidos manualmente. A ficha de investigação preenchida pelos pancientes foi anexada aos apêndices do trabalho.
+Os dados analisados neste trabalho são provenientes do Sistema de Informação de Agravos de Notificação (SINAN), onde são registradas as informações contidas nas fichas de investigação (anexo)
 
-A população do estudo compreendeu todos os casos de hantavirose confirmados no estado do Paraná e que apresentaram início dos sintomas dentro do período do estudo (Janeiro de 1992 a Junho de 2016)
+A população do estudo compreendeu todos os casos de hantavirose confirmados no estado do Paraná e que apresentaram início dos sintomas dentro do período do estudo (janeiro de 1992 a junho de 2016)
 
 Neste trabalho, a variável resposta de interesse tempo (em dias), foi calculada através do tempo entre as datas data de óbito e a data do 1º sintoma do indivíduo conforme a função a seguir.
 
@@ -14,9 +14,7 @@ Para os indivíduos que não apresentaram data de óbito, o tempo (em dias) foi 
 
 $$tempo = \text{data encerramento} - \text{data primeiro sintoma}$$
 
-Feito isso, os dados foram divididos entre cura e óbito, sendo cura o “indivíduo notificado por serviço de saúde do Estado do Paraná, no período de estudo e que tenha sido confirmado para hantavirose com evolução para cura” e óbito, o “indivíduo notificado por serviço de saúde do Estado do Paraná, no período de estudo e que tenha sido confirmado para hantavirose com evolução para óbito”. 
-
-Pacientes que não apresentaram data de óbito foram considerados como censura.
+Feito isso, os dados foram divididos entre cura e óbito, sendo cura o “indivíduo notificado por serviço de saúde do Estado do Paraná, no período de estudo e que tenha sido confirmado para hantavirose com evolução para cura” e óbito, o “indivíduo notificado por serviço de saúde do Estado do Paraná, no período de estudo e que tenha sido confirmado para hantavirose com evolução para óbito”. Pacientes que não apresentaram data de óbito nem data de cura foram considerados como censura.
 
 \newpage
 
@@ -37,12 +35,12 @@ recaída, mas também pode ser considerada como a melhora do quadro clínico do 
 
 #### Função de Sobrevivência
 
-Uma das principais funções probabilísticas usadas para descrever estudo de sobrevivência é a função de sobrevivência, que em termos probabilisticos é escrita como:
+Uma das principais funções probabilísticas usadas para descrever estudo de sobrevivência é a função de sobrevivência, que em termos probabilísticos é escrita como:
 
 $$
 S(t) = P(T\geqslant t)
 $$
-A função de sobrevivênca é definida com a probabilidade da falha ocorrer até o tempo $t$, ou seja, a probabilidade de um indivíduo sobreviver ao tempo $t$.
+A função de sobrevivência é definida com a probabilidade da falha ocorrer até o tempo $t$, ou seja, a probabilidade de um indivíduo sobreviver ao tempo $t$.
 
 Em consequência, a função de distribuição acumulada é definida como a probabilidade da falha ocorrer antes do tempo t, isto é, $F(t) = 1 - S(t)$.
 
@@ -54,7 +52,7 @@ $$
 S(t_1) - S(t_2).
 $$
 
-Dado que a falha não ocorreu antes do intervalo $t1$, definimos a taxa de falha durante o perído $[t1,t2)$ como a probabilidade de ocorrer a falha durante esse intervalo, dividida pelo compriimento do intervalos. Sendo assim, podemos definir a função que expressa a taxa de falha no intervalo $[t1,t2)$ por:
+Dado que a falha não ocorreu antes do intervalo $t1$, definimos a taxa de falha durante o período $[t1,t2)$ como a probabilidade de ocorrer a falha durante esse intervalo, dividida pelo comprimento do intervalos. Sendo assim, podemos definir a função que expressa a taxa de falha no intervalo $[t1,t2)$ por:
 
 $$
 \frac{S(t_1) - S(t_2)}{(t_1-t_2)S(t_1)} 
@@ -68,16 +66,16 @@ $$
 
 #### Censura
 
-A principal caracteristica da análise de sobrevivência é a utilização de todas as informações disponíveis, ou seja, tanto os indivíduos de um experimento 
+A principal característica da análise de sobrevivência é a utilização de todas as informações disponíveis, ou seja, tanto os indivíduos de um experimento 
 que apresentaram o tempo de falha quanto os que não experimentaram o evento. Essa informação é chamada de Censura.
 
-Mesmo com dados censurados contendo informações incompletas ou parciais sobre um paciente, todos os dados registrados devem ser considerados, visto que o tempo até a ocorrência do evento (falha), para todos os pacientes, é superior ao tempo registrado até o ultimo acompanhamento. Ressaltando que os dados, mesmo que censurados, fornecem informações importantes sobre o tempo de vida do paciente e a não utilização de tais dados podem fornecer resultados viciados.
+Mesmo com dados censurados contendo informações incompletas ou parciais sobre um paciente, todos os dados registrados devem ser considerados, visto que o tempo até a ocorrência do evento (falha), para todos os pacientes, é superior ao tempo registrado até o último acompanhamento. Ressaltando que os dados, mesmo que censurados, fornecem informações importantes sobre o tempo de vida do paciente e a não utilização de tais dados podem fornecer resultados viciados.
 
 Há diferentes tipos de censura e esta depende exclusivamente da história do estudo e de mecanismos aleatórios, externos ao estudo em questão, podendo ser de um dos tipos a seguir:
 
 1. Censura tipo 1 - Alguns indivíduos não apresentaram o evento até o final do experimento
 
-2. Censura tipo 2 - Estudo é finalizado após a  ocorrência de um número pré estabelecido de falhas
+2. Censura tipo 2 - Estudo é finalizado após a ocorrência de um número pré-estabelecido de falhas
 
 3. Censura aleatória - O acompanhamento de alguns indivíduos foi interrompido por alguma razão e alguns indivíduos não experimentaram o evento até o final do estudo.
 
@@ -91,19 +89,19 @@ $$
 \end{cases}
 $$
 
-### Estimador de Kaplan-meier
+### Estimador de Kaplan-Meier
 
 O estimador de Kaplan-Meier, também chamado estimador produto-limite, foi proposto por Kaplan e Meier em 1958 e é sem dúvida o mais utilizado em estudos clínicos.
 
 Na sua construção, o estimado de Kaplan Meier considera tanto intervalos de tempo quanto forem o número de falhas distintas. Os limites dos intervalos de tempo são os tempos de falha da amostra\cite{book}.
 
-Considere $t_1 < t_2 \cdots < t_k$, os $k$ tempos distintos e ordeados de falha, $d_j$ o número de falhas em $t_j$, $j = 1,\cdots,k$, e $n_j$ o número de indivíduos sob risco em $t_j$, o estimador de Kaplan Meier é, então, definido por:
+Considere $t_1 < t_2 \cdots < t_k$, os $k$ tempos distintos e ordenados de falha, $d_j$ o número de falhas em $t_j$, $j = 1,\cdots,k$, e $n_j$ o número de indivíduos sob risco em $t_j$, o estimador de Kaplan Meier é, então, definido por:
 
 $$
 \hat{S}(t) = P(T>t) = \prod_{j:t_j<t}(\frac{n_j-d_j}{n_j}) = \prod_{j:tj<t}(1-\frac{d_j}{n_j})
 $$
-As estimativas via estiamdor de Kaplan Meier são usualmente representadas graficamente e mostram o comportamento da curva de sobrevivência. Pressupõe uma única causa de falha de interesse, que ocorre com probabilidade igual a 1 se
-o tempo de seguimento for suficientemente longo, e trata como censura os tempos observados para aqueles indivíduos que não apresentam o evento de interesse até o final do tempo de seguimento
+As estimativas via estimador de Kaplan Meier são usualmente representadas graficamente e mostram o comportamento da curva de sobrevivência. Pressupõe uma única causa de falha de interesse, que ocorre com probabilidade igual a 1 se
+o tempo de seguimento for suficientemente longo, e trata como censura os tempos observados para aqueles indivíduos que não apresentam o evento de interesse até o final do tempo de seguimento.
 
 ### Modelo de Fração de Cura
 
@@ -128,11 +126,11 @@ Geralmente, a função de ligação logito é usada para modelar o efeito $z$, m
 
 Conforme mencionado na seção 4.1.2, o pacote com a implementação utilizado será o smcure, portanto é importante ressaltar algumas particularidades e explicar a parte computacional do método.
 
-Para a estimação dos parâmetros de interesse é utilizado o algoritimo EM (algoritimo de maximização de expectativa), que é um método iterativo para estimar parâmetros em modelos estatísticos, quando o modelo depende de variáveis latentes, ou seja, não observadas, que no presente estudo é dado pela cura do indivíduo.
+Para a estimação dos parâmetros de interesse é utilizado o algoritmo EM (algoritmo de maximização de expectativa), que é um método iterativo para estimar parâmetros em modelos estatísticos, quando o modelo depende de variáveis latentes, ou seja, não observadas, que no presente estudo é dado pela cura do indivíduo.
 
 Sendo $\textbf{O} = (t_i,\delta, z_i,x_i)$ denotando os dados observados para o i-ésimo indivíduo onde $i = 1,\cdots,n$, $t_i$ é o tempo de sobrevivência observado, $\delta$ o indicador de censura, e $z_i,x_i$ são as possíveis covariáveis de incidência e latência respectivamente. Vale ressaltar que as mesmas covariáveis podem ser utilizadas para os componentes de incidência e latência, embora usemos notações diferentes.
 
-Sendo $\Theta = (b,\beta,S_0(t))$ os parâmetros desconhecidos. Deixando $Y$ como o indicador de que um indivíduo vai aventualmente ($Y=1$) ou nunca ($Y=0$) experimentar o evento, com probabilidade de $\pi(z)$. Dado $y = (y_1,y_2,\cdots,y_n)$ e $\textbf{O}$, a função de Verossimilhança pode ser expressa como:
+Sendo $\Theta = (b,\beta,S_0(t))$ os parâmetros desconhecidos. Deixando $Y$ como o indicador de que um indivíduo vai eventualmente ($Y=1$) ou nunca ($Y=0$) experimentar o evento, com probabilidade de $\pi(z)$. Dado $y = (y_1,y_2,\cdots,y_n)$ e $\textbf{O}$, a função de Verossimilhança pode ser expressa como:
 
 $$
 \prod_{i=1}^{n}[1 - \pi(z_i)]^{1-y_i}\pi(z_i)^{y_i}{h(t_i|Y=1, X_i)}^{\delta_iy_i}{S(t_i|Y=1,X_i)}^{Y_I}
@@ -140,26 +138,4 @@ $$
 
 Devido à complexidade da equação de estimativa no algoritmo EM, os erros padrão dos parâmetros estimados não estão diretamente disponíveis. Para obter a variância de $\hat{\beta}$ e $\hat{b}$, o pacote desenha aleatoriamente amostras bootstrap com substituição pela função 'sammple' do software R.
 
-Para um intendimento mais detalhado do método recomendo a leitura do artigo escrito por Chao Cai, Yubo Zou, Yingwei Peng and Jiajia Zhanga em 2012 que se encontra nas referêcia do trabalho. 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Para um entendimento mais detalhado do método recomendo a leitura do artigo escrito por Chao Cai, Yubo Zou, Yingwei Peng and Jiajia Zhanga em 2012 que se encontra nas referência do trabalho. 

@@ -1,1 +1,11 @@
-Apresente as considerações finais (ou conclusões) do trabalho.
+O presente estudo apresentou dificuldade quanto a seleção e tratativa dos dados. Diversas informações que poderiam ser interessantes para a análise tiveram de ser descartas devido a problemas com a coleta das informações. Alguns sintomas presentes na base por exemplo, contaram com mais de 95% de dados *missing*, impossibilitando assim a utilização da variável.
+
+Com as informações que tínhamos disponível para a realização do trabalho, o objetivo principal era analisar fatores de risco para o óbito por hantavirose no Paraná, nos anos de 1992 até 2016, utilizando uma abordagem via um modelo de Fração de Cura. Para isso, foram aplicadas técnicas estatísticas com o intuito de ajustar o melhor modelo possível para os dados e, a partir dele, extrair conclusões.
+
+Na análise descritiva, por meio do estimado de Kaplan Meier, pudemos identificar informações relevantes sobre os dados, como as taxas de sobrevivência e o respectivo valor de p extraído do teste log-rank.
+
+O modelo de Fração de Cura aplicado apresentou um resultado interessante para a análise de interesse. As variáveis significativas no presente estudo foram coincidentes com as variáveis significativas no modelo proposto pela Daniele Arita \cite{Arita2019}.
+
+Como sugestão para estudos futuros, seria interessante avaliar a maneira como os dados foram coletados. Um acompanhamento mais severo dos infectados talvez fosse mais recomendado para um melhor entendimento dos fatores associados ao óbito da doença, além de diminuir a quantidade de informações em branco na base. Quanto a parte computacional, seria interessante buscar criar uma implementação do modelo ao invés de utilizar implementações já existentes no R, dada as dificuldades que tivemos com o pacote selecionado para a modelagem dos dados. 
+
+É importante ressaltar a necessidade de uma conscientização da população quanto a hantavirose, principalmente na zonas rurais do país, conscientizando da população quanto a doença.

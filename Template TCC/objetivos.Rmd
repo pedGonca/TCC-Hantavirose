@@ -5,7 +5,7 @@ O presente estudo tem como objetivo estudar fatores associados ao tempo de cura 
 ## Objetivos Específicos
 
 a. Revisar a literatura no que diz respeito às abordagens propostas para Análise de Sobrevivência;
-b. Revisar os pacotes disponíveis no software R (cite r) para estimação e diagnóstico de uma modelagem usando Análise de Sobrevivência fazendo uso dos pacotes survival (cite survival) e smcure (cite smcure);
+b. Revisar os pacotes disponíveis no software R \citeonline{r} para estimação e diagnóstico de uma modelagem usando Análise de Sobrevivência fazendo uso dos pacotes survival \citeonline{survival-book} e smcure \citeonline{smcure};
 c. Realizar uma análise descritiva dos dados descritos na Seção 3.1.1 para entendimento mais detalhado e consistente das informações;
 d. Com base nos dados obtidos do banco de monitoramento da Secretaria de Estado da Saúde do Paraná (SESA/PR), realizar uma modelagem usando Análise de Sobrevivência em busca de definir os fatores associados ao óbito ou cura de um paciente infectado por Hantavirose.
 e. Apresentar o modelo, discutir os resultados obtidos e tirar conclusões.

@@ -317,13 +317,26 @@ pd_final <- smcure(Surv(tempo,censura) ~ IDADE + SEXO12 + TONTURAREG + SANGRESRE
                     MIALGIASREG + RSRESREG1 + RSRESREG2 + RSRESREG3 + SINAISHEMOREG + INTERNACAOREG +
                     DIARREIAREG + RESPMECANREG,
             cureform = ~ IDADE + SEXO12 + TONTURAREG + SANGRESREG + DISPNEIAREG +
-                    HIPOTENSAOREG + RSRESREG1 + RSRESREG2 + RSRESREG3 +
-                    DIARREIAREG + RESPMECANREG,
-            data = dados2, model = 'ph', nboot = 500)
+                    HIPOTENSAOREG + DIARREIAREG + RESPMECANREG,
+            data = dados2, model = 'ph', nboot = 1000)
 printsmcure(pd_final)
 
+
+
+pd_ph <- smcure(Surv(tempo,censura)~SEXO12+SINAISHEMOREG+RESPMECANREG+CEFALEIAREG+HIPOTENSAOREG,
+            cureform = ~SEXO12+TONTURAREG+SANGRESREG+SINAISHEMOREG+CEFALEIAREG,
+            data = dados3, model = 'ph', nboot = 500)
+printsmcure(pd_ph)
 ###########################
 
+
+##################
+## É ELEEEE
+## É TETRAAAAA
+pd_ph_final <- smcure(Surv(tempo,censura)~IDADE+SEXO12+TONTURAREG+SANGRESREG+RESPMECANREG,
+            cureform = ~IDADE+SEXO12+TONTURAREG+SANGRESREG+RESPMECANREG,
+            data = dados2, model = 'ph', nboot = 200)
+##################
 
 
 dados2 <- dados[,c('tempo', 'censura','IDADE_CAT','IDADE', 'SEXO12','TONTURAREG', 
