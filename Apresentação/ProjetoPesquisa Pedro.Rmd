@@ -1,0 +1,133 @@
+---
+title: "Técnicas de Análise de Sobrevivência aplicada a dados de Hantavirose"
+subtitle: "Projeto de Pesquisa"
+author: 
+  - "Aluno: Pedro H P Gonçalves"
+  - "Orientador(a): Dra. Silvia Emiko Shimakura (UFPR)"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: [middlebury, middlebury-fonts]
+    nature:
+    highlightStyle: github
+    highlightLines: true
+    countIncrementalSlides: false
+    ratio: "16:9"
+---
+
+# Introdução
+
+## Contexto Análise de Sobrevivência
+
+- Área em crescimento na últimas decadas:
+  - De 11% 1979 para 32% em 1989 nos artigos do The New England Journal of Medicine.
+  
+- Muito empregada pelas ciências da saúde, biológicas e engenharias.
+  
+- Tempo até a ocorrência de um evento de interesse (Tempo de falha).
+
+- Censura: 
+  - Observação parcial da respostas.
+
+---
+
+# Introdução
+
+## Pesquisa
+
+- Hantavirose.
+  - Transmitida por ratos do campo, com a inalação de partículas virais que ficam no ar vindas da urina e fezes desses roedores infectados.
+  - Podem ocorrer por meio de escoriações cutâneas ou mordedura de roedores.
+  
+- Sintomas semelhantes a gripe.
+
+- A taxa de letalidade média é de 46,5%.
+
+![](hantavirose.png)
+
+- Não existe um tratamento específico para as infecções por hantavírus.
+
+---
+
+# Objetivos
+
+## Objetivos Gerais
+
+Identificar os fatores prognósticos e de risco para o óbito por hantavirose no Estado do Paraná no período de 1992 a 2016.
+
+
+
+## Objetivos Específicos
+
+- Revisão de literatura.
+
+- Análise descritiva e exploratória dos dados.
+
+- Modelagem.
+
+- Explorar os resultados.
+
+- Apresentar Conslusões.
+
+
+---
+# Materiais e Métodos
+
+## Conjunto de Dados
+
+-  Banco de monitoramento da Secretaria de Estado da Saúde do Paraná (SESA/PR)
+
+  - População dividida em cura e óbito
+  - 280 0bservações
+  - 120 Variáveis
+  
+## Recursos Computacionais
+
+- R
+  - survival
+  - smcure
+
+---
+# Materiais e Métodos
+
+## Modelagem
+
+- Modelo de fração de cura Semiparamétrico: Tipo especial de modelo de sobrevivência.
+
+- Estimar a taxa de cura do tratamento e a taxa de sobrevivência de pacientes não curados ao mesmo tempo.
+- Função de Sobrevivência.
+
+$$S_{pop}(t|x,z) = \pi(z)S(t|x) + 1 - \pi(z)$$, onde $1 - \pi(z)$ é a probabilidade de um paciente ser curado dependendo de $z$.
+
+- Motivado do Trabalho de Conclusão de Curso (TCC) da Daniele Akemi Arita.
+
+---
+# Cronograma
+
+![](cronograma.png)
+
+---
+# Conclusão
+
+- Motivação da escolha do modelo do Fração de cura.
+
+- Doença apresenta taxa de cura.
+
+- Resultados aplicáveis.
+
+---
+# Referências
+
+1. Cai C, Zou Y, Peng Y, Zhang J. smcure: an R-package for estimating semiparametric mixture cure models. Comput Methods Programs Biomed. 2012;108(3):1255-1260. doi:10.1016/j.cmpb.2012.08.013.
+
+2. Zhang J, Peng Y. Semiparametric Estimation Methods for the Accelerated Failure Time Mixture Cure Model. J Korean Stat Soc. 2012;41(3):415-422. doi:10.1016/j.jkss.2012.01.003.
+
+3. Berkson J, Gage R. Survival curve for cancer patients following treatment. Journal of the American Statistical Association. 1952;47:501–515.
+
+4. Boag J. Maximum likelihood estimates of the proportion of patients cured by cancer therapy. Journal of the Royal Statistical Society Series B  1949;11(1):15–53.
+
+5. Li C-S, Taylor JMG. A semi-parametric accelerated failure time cure model. Statist. Med. 2002;21(21):3235–3247.
+
+---
+
+

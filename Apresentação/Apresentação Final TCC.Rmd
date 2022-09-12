@@ -1,0 +1,187 @@
+---
+title: "FATORES DE RISCO PARA ÓBITO POR HANTAVIROSE NO PARANÁ, 1992-2016, ABORDAGEM VIA UM MODELO DE FRAÇÃO DE CURA."
+subtitle: "Laboratório B"
+author: 
+  - "Aluno: Pedro H P Gonçalves"
+  - "Orientador(a): Dra. Silvia Emiko Shimakura (UFPR)"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: [middlebury, middlebury-fonts]
+    nature:
+    highlightStyle: github
+    highlightLines: true
+    countIncrementalSlides: false
+    ratio: "16:9"
+
+---
+# Introdução
+
+## Motivação da Pesquisa
+
+- Hantavirose.
+  - Transmitida por ratos do campo, com a inalação de partículas virais que ficam no ar vindas da urina e fezes desses roedores infectados.
+  - Podem ocorrer por meio de escoriações cutâneas ou mordedura de roedores.
+  
+- Sintomas semelhantes a gripe.
+
+- Não existe um tratamento específico para as infecções por hantavírus.
+
+---
+# Introdução
+
+## Análise de Sobrevivência
+
+- Área em crescimento na últimas decadas:
+  - De 11% em 1979 para 32% em 1989 nos artigos do The New England Journal of Medicine.
+  
+- Muito empregada pelas ciências da saúde, biológicas e engenharias.
+  
+- Tempo até a ocorrência de um evento de interesse (Tempo de falha).
+
+- Motivado do Trabalho de Mestrado da Daniele Akemi Arita.
+---
+# Introdução
+
+## Caracterização dos Dados de Sobrevivência
+
+- Dados comuns poderiam ser explicados por uma regressão simples.
+
+- Tempo de Falha:
+  - Tempo até a ocorrência de um evento de interesse (Tempo de falha).
+
+- Censura:
+  - Observação parcial da respostas.
+
+---
+## Revisão de Literatura
+
+
+---
+# Materiais e Métodos
+
+## Conjunto de Dados
+
+-  Banco de monitoramento da Secretaria de Estado da Saúde do Paraná (SESA/PR).
+
+  - 280 0bservações
+  - 69 Variáveis
+
+---
+# Material e Métodos
+Foto da ficha de cadastro
+---
+
+## Recursos Computacionais
+
+- R
+  - survival
+  - smcure
+
+---
+# Materiais e Métodos
+
+## Função de Sobrevivência
+
+- Probabilidade da falha ocorrer até o tempo t.
+
+$$S(t) = P(T\geqslant t)$$
+
+- Função de distribuição acumalada.
+
+$$F(t) = 1 - S(t)$$
+
+---
+# Materiais e Métodos
+
+## Censura
+
+- Censura tipo 1.
+
+- Censura tipo 2.
+
+- Censura Aleatória.
+
+$$
+\delta = 
+\begin{cases}
+ & 1, \text{ se t é um tempo de falha } \\ 
+ & 0, \text{ se t é um tempo censurado }
+\end{cases}
+$$
+
+---
+
+# Materiais e Métodos
+
+## Modelo de Fração de Cura
+
+- Modelo de fração de cura Semiparamétrico: Tipo especial de modelo de sobrevivência.
+
+- Estimar a taxa de cura do tratamento e a taxa de sobrevivência de pacientes não curados ao mesmo tempo.
+- Função de Sobrevivência:
+
+$$S_{pop}(t|x,z) = \pi(z)S(t|x) + 1 - \pi(z)$$, onde $1 - \pi(z)$ é a probabilidade de um paciente ser curado dependendo de $z$.
+
+---
+# Materiais e Métodos
+
+## Método Computacional
+
+- Parâmetros estimados via algoritmo EM (algoritimo de maximização de expectativa)
+
+ $\textbf{O} = (t_i,\delta, z_i,x_i)$
+
+- Função de Verossimilhança:
+
+$$
+\prod_{i=1}^{n}[1 - \pi(z_i)]^{1-y_i}\pi(z_i)^{y_i}{h(t_i|Y=1, X_i)}^{\delta_iy_i}{S(t_i|Y=1,X_i)}^{Y_I}
+$$
+
+Onde $\textbf{O} = (t_i,\delta, z_i,x_i)$ e $\Theta = (b,\beta,S_0(t))$.
+
+---
+# Análise Descritiva 
+
+## Material final do estudo
+
+1. Tempo: Tempo decorrido do primeiro sintoma do paciente até o óbito ou perda doacompanhamento.
+2. Idade: Idade do paciente.
+3. Sexo: Sexo do paciente (homem ou mulher).
+4. Tontura: Apresentou tontura (sim ou não).
+5. Cefaleia: Apresentou cefaleia (sim ou não).
+6. Sangramento Respiratório: Apresentou sangramento respiratório (sim ou não).
+7. Dispneia: Apresentou falta de ar (sim ou não).
+8. Hipotensão: Apresentou problemas com pressão baixa (sim ou não).
+9. Mialgia: Apresentou dores musculares (sim ou não).
+10. Regional de Saúde: Regional de saúde na qual o paciente foi atendido, podendo serUnião da vitória, Guarapuava, Irati e Outros (sim ou não).
+11. Sinais Hemorrágicos: Apresentou sinais hemorrágicos (sim ou não).
+12. Internação: Paciente foi internado no período em que esteve com a doença (sim ounão).
+13. Diarreia: Apresentou diarreia (sim ou não).
+14. Respirador Mecânico: Precisou de respirador mecânico (sim ou não).
+
+---
+# Análise Descritiva  
+
+---
+# Análise Descritiva 
+---
+# 
+---
+
+
+# Referências
+
+1. Cai C, Zou Y, Peng Y, Zhang J. smcure: an R-package for estimating semiparametric mixture cure models. Comput Methods Programs Biomed. 2012;108(3):1255-1260. doi:10.1016/j.cmpb.2012.08.013.
+
+2. Zhang J, Peng Y. Semiparametric Estimation Methods for the Accelerated Failure Time Mixture Cure Model. J Korean Stat Soc. 2012;41(3):415-422. doi:10.1016/j.jkss.2012.01.003.
+
+3. Berkson J, Gage R. Survival curve for cancer patients following treatment. Journal of the American Statistical Association. 1952;47:501–515.
+
+4. Boag J. Maximum likelihood estimates of the proportion of patients cured by cancer therapy. Journal of the Royal Statistical Society Series B  1949;11(1):15–53.
+
+5. Li C-S, Taylor JMG. A semi-parametric accelerated failure time cure model. Statist. Med. 2002;21(21):3235–3247.
+
+---
+
+
