@@ -94,6 +94,52 @@ str(dados2)
 head(dados2)
 
 
+## Gráficos da análise descritiva
+
+## Idade e Sexo
+plot1 <- ggplot(data = dados, aes(x = IDADE_CAT)) +
+  geom_bar(aes(fill = CensuraPlot), width = 0.6, position = "dodge") +
+  labs(x = "Idade", y = "Quantidade") + 
+  theme(legend.position = "top") +
+  labs(fill = "Óbito") +
+  scale_fill_manual(values = c("steelblue", "darkgray")) +
+  theme_minimal() +
+  theme(legend.position = "top") 
+
+plot2 <- ggplot(data = dados, aes(x = SEXOREG)) +
+  geom_bar(aes(fill = CensuraPlot), width = 0.6, position = "dodge") +
+  labs(x = "Sexo", y = "Quantidade") + 
+  theme(legend.position = "top") +
+  labs(fill = "Óbito") +
+  scale_fill_manual(values = c("steelblue", "darkgray")) +
+  theme_minimal() +
+  theme(legend.position = "top") 
+
+grid.arrange(plot1,plot2, ncol = 2, nrow = 1)
+
+
+## Tempo e Regional de saúde
+plot3 <- ggplot(data = dados, aes(x = tempo, fill = CensuraPlot)) +
+  geom_histogram() +
+  labs(x = "Tempo", y = "Quantidade") + 
+  labs(fill = "Óbito") +
+  scale_fill_manual(values = c("steelblue", "darkgray")) +
+  theme_minimal() +
+  theme(legend.position = "top") ; plot3
+
+plot4 <- ggplot(data = dados, aes(x = RSRESR_BACKUP, fill = CensuraPlot)) +
+  geom_bar(width = 0.5, position = "dodge") +
+  labs(x = "Regional de saúde", y = "Quantidade") + 
+  labs(fill = "Óbito") +
+  scale_fill_manual(values = c("steelblue", "darkgray")) +
+  theme_minimal() +
+  theme(legend.position = "top") ; plot4
+
+grid.arrange(plot3,plot4, ncol = 2, nrow = 1)
+
+
+
+
 # Criando um dados3 retirando a obervaÃ§Ã£o com tempo = 80, que atrapalha o Kaplan Meier.
 dados3 <- filter(dados2, tempo <= 70)
 str(dados3)

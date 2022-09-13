@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Técnicas de Análise de Sobrevivência aplicada a dados de Hantavirose</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Aluno: Pedro H P Gonçalves" />
+    <meta name="author" content="Orientador(a): Dra. Silvia Emiko Shimakura (UFPR)" />
+    <script src="libs/header-attrs-2.14/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/middlebury.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/middlebury-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Técnicas de Análise de Sobrevivência aplicada a dados de Hantavirose
+]
+.subtitle[
+## Projeto de Pesquisa
+]
+.author[
+### Aluno: Pedro H P Gonçalves
+]
+.author[
+### Orientador(a): Dra. Silvia Emiko Shimakura (UFPR)
+]
+
+---
+
+
+# Introdução
+
+## Contexto Análise de Sobrevivência
+
+- Área em crescimento na últimas decadas:
+  - De 11% 1979 para 32% em 1989 nos artigos do The New England Journal of Medicine.
+  
+- Muito empregada pelas ciências da saúde, biológicas e engenharias.
+  
+- Tempo até a ocorrência de um evento de interesse (Tempo de falha).
+
+- Censura: 
+  - Observação parcial da respostas.
+
+---
+
+# Introdução
+
+## Pesquisa
+
+- Hantavirose.
+  - Transmitida por ratos do campo, com a inalação de partículas virais que ficam no ar vindas da urina e fezes desses roedores infectados.
+  - Podem ocorrer por meio de escoriações cutâneas ou mordedura de roedores.
+  
+- Sintomas semelhantes a gripe.
+
+- A taxa de letalidade média é de 46,5%.
+
+![](hantavirose.png)
+
+- Não existe um tratamento específico para as infecções por hantavírus.
+
+---
+
+# Objetivos
+
+## Objetivos Gerais
+
+Identificar os fatores prognósticos e de risco para o óbito por hantavirose no Estado do Paraná no período de 1992 a 2016.
+
+
+
+## Objetivos Específicos
+
+- Revisão de literatura.
+
+- Análise descritiva e exploratória dos dados.
+
+- Modelagem.
+
+- Explorar os resultados.
+
+- Apresentar Conslusões.
+
+
+---
+# Materiais e Métodos
+
+## Conjunto de Dados
+
+-  Banco de monitoramento da Secretaria de Estado da Saúde do Paraná (SESA/PR)
+
+  - População dividida em cura e óbito
+  - 280 0bservações
+  - 120 Variáveis
+  
+## Recursos Computacionais
+
+- R
+  - survival
+  - smcure
+
+---
+# Materiais e Métodos
+
+## Modelagem
+
+- Modelo de fração de cura Semiparamétrico: Tipo especial de modelo de sobrevivência.
+
+- Estimar a taxa de cura do tratamento e a taxa de sobrevivência de pacientes não curados ao mesmo tempo.
+- Função de Sobrevivência.
+
+`$$S_{pop}(t|x,z) = \pi(z)S(t|x) + 1 - \pi(z)$$`, onde `\(1 - \pi(z)\)` é a probabilidade de um paciente ser curado dependendo de `\(z\)`.
+
+- Motivado do Trabalho de Conclusão de Curso (TCC) da Daniele Akemi Arita.
+
+---
+# Cronograma
+
+![](cronograma.png)
+
+---
+# Conclusão
+
+- Motivação da escolha do modelo do Fração de cura.
+
+- Doença apresenta taxa de cura.
+
+- Resultados aplicáveis.
+
+---
+# Referências
+
+1. Cai C, Zou Y, Peng Y, Zhang J. smcure: an R-package for estimating semiparametric mixture cure models. Comput Methods Programs Biomed. 2012;108(3):1255-1260. doi:10.1016/j.cmpb.2012.08.013.
+
+2. Zhang J, Peng Y. Semiparametric Estimation Methods for the Accelerated Failure Time Mixture Cure Model. J Korean Stat Soc. 2012;41(3):415-422. doi:10.1016/j.jkss.2012.01.003.
+
+3. Berkson J, Gage R. Survival curve for cancer patients following treatment. Journal of the American Statistical Association. 1952;47:501–515.
+
+4. Boag J. Maximum likelihood estimates of the proportion of patients cured by cancer therapy. Journal of the Royal Statistical Society Series B  1949;11(1):15–53.
+
+5. Li C-S, Taylor JMG. A semi-parametric accelerated failure time cure model. Statist. Med. 2002;21(21):3235–3247.
+
+---
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create();
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

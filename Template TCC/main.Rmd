@@ -15,7 +15,7 @@ epigrafe: |
 resumo: |
   `r if(knitr:::is_latex_output()) paste(readLines("resumo.Rmd"),
   collapse = '\n  ')`
-palavras-chave: [Palavra-chave 1, Palavra-chave 2]
+palavras-chave: [Hantavirose, Análise de Sobrevivência, Fração de Cura, Kaplan Meier]
 output: tcctemplate::tcc_template
 ---
 

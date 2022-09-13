@@ -1,5 +1,5 @@
 ---
-title: "FATORES DE RISCO PARA ÓBITO POR HANTAVIROSE NO PARANÁ, 1992-2016, ABORDAGEM VIA UM MODELO DE FRAÇÃO DE CURA."
+title: "FATORES DE RISCO PARA ÓBITO POR HANTAVIROSE NO PARANÁ, 1992-2016; ABORDAGEM VIA UM MODELO DE FRAÇÃO DE CURA."
 subtitle: "Laboratório B"
 author: 
   - "Aluno: Pedro H P Gonçalves"
@@ -15,92 +15,189 @@ output:
     ratio: "16:9"
 
 ---
+
+```{css, echo=F}
+/* Table width = 100% max-width */
+
+.remark-slide table{
+    width: 100%;
+}
+
+/* Change the background color to white for shaded rows (even rows) */
+
+.remark-slide thead, .remark-slide tr:nth-child(3n) {
+    background-color: white;
+}
+```
+
+```{r, include= FALSE, message= FALSE, warning= FALSE}
+# Setando o diretório
+setwd("~/RStudio Facul/CE094 - Laboratório B/tcc-hantavirose/Template TCC")
+
+# Pacotes
+library(tidyverse)
+library(survival)
+library(survminer)
+library(ggfortify)
+library(knitr)
+library(gridExtra)
+library(xtable)
+
+# Lendo os dados e analisando sua estrutura
+path <- 'hantavir2.csv'
+dados <- read.csv(path, 
+    header = TRUE, sep = ';')
+
+# Criando a variável tempo
+
+# Data de óbito menos o tempo do primeiro sintoma apresentado para casos onde houve óbito
+tempo <- as.numeric(as.Date(dados$DATAOBITO,"%d/%m/%Y")-as.Date(dados$DATA1SINT,"%d/%m/%Y"))
+aux = dados$CASOCONTROLE==2
+
+# Data de alta do paciente menos o tempo do primeiro sintoma apresentado para casos onde não houve óbito
+tempo[aux] <- as.numeric(as.Date(dados$DATAALTA[aux],"%d/%m/%Y")-as.Date(dados$DATA1SINT[aux],"%d/%m/%Y"))
+
+dados$tempo <- tempo
+
+aux <- is.na(dados$tempo)
+
+dados$tempo[aux] <- as.numeric(as.Date(dados$DATAENCERR[aux],"%d/%m/%Y")-as.Date(dados$DATA1SINT[aux],"%d/%m/%Y"))
+aux <- is.na(dados$tempo)
+
+dados$tempo[aux] <- 60
+aux <- is.na(dados$tempo)
+
+aux <- dados$tempo < 0
+
+dados$tempo[aux] <- as.numeric(as.Date(dados$DATAENCERR[aux],"%d/%m/%Y")-as.Date(dados$DATA1SINT[aux],"%d/%m/%Y"))
+aux <- dados$tempo == 0
+sum(aux)
+dados$tempo[aux] <- 1
+
+aux=dados$tempo>100
+dados$tempo[aux] <- as.numeric(as.Date(dados$DATAENCERR[aux],"%d/%m/%Y")-as.Date(dados$DATA1SINT[aux],"%d/%m/%Y"))
+
+aux <- dados$tempo>100
+dados$tempo[aux]<- 80
+dados <- filter(dados, tempo >= 1)
+
+dados[dados$tempo < 0]
+
+
+
+# Criando a variável de censura
+# 0 para censura e 1 para os pacientes com data de óbito registrada
+dados$censura = ifelse(dados$CASOCONTROLE == 1,1,0)
+
+# Categorizando a idade 
+dados$IDADE_CAT <- ""
+dados$IDADE_CAT[dados$IDADE < 20] <- '[0;20]'
+dados$IDADE_CAT[dados$IDADE >= 20 & dados$IDADE <= 29] <- '[20;29]'
+dados$IDADE_CAT[dados$IDADE >= 30 & dados$IDADE <= 39] <- '[30;39]'
+dados$IDADE_CAT[dados$IDADE >= 40 & dados$IDADE <= 49] <- '[40;49]'
+dados$IDADE_CAT[dados$IDADE >= 50 & dados$IDADE <= 59] <- '[50;59]'
+dados$IDADE_CAT[dados$IDADE >= 60] <- '[60['
+```
+
+
 # Introdução
 
 ## Motivação da Pesquisa
 
-- Hantavirose.
-  - Transmitida por ratos do campo, com a inalação de partículas virais que ficam no ar vindas da urina e fezes desses roedores infectados.
+- Hantavirose:
+
+  - Transmitida por ratos do campo.
+
   - Podem ocorrer por meio de escoriações cutâneas ou mordedura de roedores.
   
-- Sintomas semelhantes a gripe.
+  - Sintomas semelhantes a gripe.
 
-- Não existe um tratamento específico para as infecções por hantavírus.
+  - Não existe um tratamento específico para as infecções por hantavírus.
+
+- Entender os fatores de risco para óbito por hantavirose via Análise de Sobrevivência (Modelo de Fração de Cura).
+  
+  - Estender o trabalho de Mestrado da Daniele Akemi Arita.
 
 ---
 # Introdução
 
 ## Análise de Sobrevivência
 
-- Área em crescimento na últimas decadas:
+- Tempo de duração esperado até a ocorrência de um ou mais eventos.
+
+- Área em crescimento na últimas décadas:
   - De 11% em 1979 para 32% em 1989 nos artigos do The New England Journal of Medicine.
   
 - Muito empregada pelas ciências da saúde, biológicas e engenharias.
-  
-- Tempo até a ocorrência de um evento de interesse (Tempo de falha).
 
-- Motivado do Trabalho de Mestrado da Daniele Akemi Arita.
 ---
 # Introdução
 
 ## Caracterização dos Dados de Sobrevivência
 
+- Presença de informações incompletas/parciais.
+
 - Dados comuns poderiam ser explicados por uma regressão simples.
 
+- Principal característica é a presença de censura.
+
 - Tempo de Falha:
-  - Tempo até a ocorrência de um evento de interesse (Tempo de falha).
+  - Tempo até a ocorrência de um evento de interesse (óbito).
 
 - Censura:
-  - Observação parcial da respostas.
-
----
-## Revisão de Literatura
-
+  - Observação parcial das respostas.
 
 ---
 # Materiais e Métodos
 
 ## Conjunto de Dados
 
--  Banco de monitoramento da Secretaria de Estado da Saúde do Paraná (SESA/PR).
+- Sistema de Informação de Agravos de Notificação (SINAN).
+
+- Casos confirmados de janeiro de 1992 a junho de 2016.
 
   - 280 0bservações
   - 69 Variáveis
 
+- Software R versão 4.0.4
+  - survival.
+  - smcure.
+
 ---
 # Material e Métodos
-Foto da ficha de cadastro
----
-
-## Recursos Computacionais
-
-- R
-  - survival
-  - smcure
-
+![](ficha_cadastro.png)
 ---
 # Materiais e Métodos
 
 ## Função de Sobrevivência
 
+- Principal função da Análise de Sobrevivência.
+
 - Probabilidade da falha ocorrer até o tempo t.
 
 $$S(t) = P(T\geqslant t)$$
+Apresenta uma forma diferente de acordo com o modelo de interesse.
 
-- Função de distribuição acumalada.
+## Estimador de Kaplan-Meier
 
-$$F(t) = 1 - S(t)$$
+- Função não paramétrica que utiliza $S(t)$ em forma de uma função escada com degraus.
+
+$$\hat{S}(t) = P(T>t) = \prod_{j:t_j<t}(\frac{n_j-d_j}{n_j}) = \prod_{j:tj<t}(1-\frac{d_j}{n_j})$$
 
 ---
 # Materiais e Métodos
 
 ## Censura
 
-- Censura tipo 1.
+- Tipos de censura
 
-- Censura tipo 2.
+  - Censura tipo 1.
 
-- Censura Aleatória.
+  - Censura tipo 2.
+
+  - Censura Aleatória.
+
+- Função indicadora de censura
 
 $$
 \delta = 
@@ -119,18 +216,34 @@ $$
 - Modelo de fração de cura Semiparamétrico: Tipo especial de modelo de sobrevivência.
 
 - Estimar a taxa de cura do tratamento e a taxa de sobrevivência de pacientes não curados ao mesmo tempo.
-- Função de Sobrevivência:
+
+- Pode ser expresso como:
 
 $$S_{pop}(t|x,z) = \pi(z)S(t|x) + 1 - \pi(z)$$, onde $1 - \pi(z)$ é a probabilidade de um paciente ser curado dependendo de $z$.
 
+- $S(t|x)$ é referido como "latência" (não observada).
+
 ---
+
 # Materiais e Métodos
 
-## Método Computacional
+## Modelo de Fração de Cura
 
-- Parâmetros estimados via algoritmo EM (algoritimo de maximização de expectativa)
+- Geralmente utiliza função logito para modelar o efeito de *z*
 
- $\textbf{O} = (t_i,\delta, z_i,x_i)$
+$$\pi(z) = \frac{exp(bz)}{1 + exp(bz)}$$
+
+- $b$ vetor de paramêtros desonhecidos.
+
+- Permite outras funções de ligação.
+
+---
+
+# Materiais e Métodos
+
+## Método de Estimação
+
+- Parâmetros estimados via algoritmo EM (algoritmo de maximização de expectativa)
 
 - Função de Verossimilhança:
 
@@ -140,48 +253,241 @@ $$
 
 Onde $\textbf{O} = (t_i,\delta, z_i,x_i)$ e $\Theta = (b,\beta,S_0(t))$.
 
+- Utiliza amostras bootstrap para os erros padrões.
+
 ---
 # Análise Descritiva 
 
 ## Material final do estudo
 
-1. Tempo: Tempo decorrido do primeiro sintoma do paciente até o óbito ou perda doacompanhamento.
-2. Idade: Idade do paciente.
-3. Sexo: Sexo do paciente (homem ou mulher).
-4. Tontura: Apresentou tontura (sim ou não).
-5. Cefaleia: Apresentou cefaleia (sim ou não).
-6. Sangramento Respiratório: Apresentou sangramento respiratório (sim ou não).
-7. Dispneia: Apresentou falta de ar (sim ou não).
-8. Hipotensão: Apresentou problemas com pressão baixa (sim ou não).
-9. Mialgia: Apresentou dores musculares (sim ou não).
-10. Regional de Saúde: Regional de saúde na qual o paciente foi atendido, podendo serUnião da vitória, Guarapuava, Irati e Outros (sim ou não).
-11. Sinais Hemorrágicos: Apresentou sinais hemorrágicos (sim ou não).
-12. Internação: Paciente foi internado no período em que esteve com a doença (sim ounão).
-13. Diarreia: Apresentou diarreia (sim ou não).
-14. Respirador Mecânico: Precisou de respirador mecânico (sim ou não).
+- Exclusão de variáveis
+
+---
+# Análise Descritiva 
+
+## Material final do estudo
+
+1. **Tempo**: Tempo decorrido do primeiro sintoma do paciente até o óbito ou perda do acompanhamento.
+2. **Idade**: Idade do paciente.
+3. **Sexo**: Sexo do paciente.
+4. **Tontura**: Apresentou tontura.
+5. **Cefaleia**: Apresentou cefaleia.
+6. **Sangramento Respiratório**: Apresentou sangramento respiratório.
+7. **Dispneia**: Apresentou falta de ar.
+8. **Hipotensão**: Apresentou problemas com pressão baixa.
+9. **Mialgia**: Apresentou dores musculares.
+10. **Regional de Saúde**: Regional de saúde na qual o paciente foi atendido.
+11. **Sinais Hemorrágicos**: Apresentou sinais hemorrágicos.
+12. **Internação**: Paciente foi internado no período em que esteve com a doença.
+13. **Diarreia**: Apresentou diarreia.
+14. **Respirador Mecânico**: Precisou de respirador mecânico.
+
+---
+
+# Análise Descritiva  
+
+ - Idade:
+     - Entre 0 até 19 anos 
+     - Entre 20 até 29 anos
+     - Entre 30 a 39 anos
+     - Entre 40 a 49 anos
+     - Entre 50 a 59 anos
+     - Maior ou igual a 60
+ 
+ - Regional de Saúde:
+     - Guarapuava
+     - Irati
+     - Outros
+     - União da Vitória
+ 
+ - Sexo:
+     - Masculino
+     - Feminino
 
 ---
 # Análise Descritiva  
 
+```{r fig2, fig.cap='Distribuição das variáveis Idade e Sexo',fig.pos="!h", echo = FALSE, fig.height= 6, fig.width = 12}
+plot1 <- ggplot(data = dados, aes(x = IDADE_CAT)) +
+  geom_bar(aes(fill = CensuraPlot), width = 0.6, position = "dodge") +
+  labs(x = "Idade", y = "Quantidade") + 
+  theme(legend.position = "top") +
+  labs(fill = "Óbito") +
+  scale_fill_manual(values = c("steelblue", "darkgray")) +
+  theme_minimal() +
+  theme(legend.position = "top") 
+
+plot2 <- ggplot(data = dados, aes(x = SEXOREG)) +
+  geom_bar(aes(fill = CensuraPlot), width = 0.6, position = "dodge") +
+  labs(x = "Sexo", y = "Quantidade") + 
+  theme(legend.position = "top") +
+  labs(fill = "Óbito") +
+  scale_fill_manual(values = c("steelblue", "darkgray")) +
+  theme_minimal() +
+  theme(legend.position = "top") 
+
+grid.arrange(plot1,plot2, ncol = 2, nrow = 1)
+```
+
 ---
 # Análise Descritiva 
----
-# 
----
 
+```{r fig1, fig.cap='Distribuição das variáveis Idade e Sexo',fig.pos="!h", echo = FALSE, warning=FALSE, message=FALSE, fig.height= 6, fig.width = 12}
+plot3 <- ggplot(data = dados, aes(x = tempo, fill = CensuraPlot)) +
+  geom_histogram() +
+  labs(x = "Tempo", y = "Quantidade") + 
+  labs(fill = "Óbito") +
+  scale_fill_manual(values = c("steelblue", "darkgray")) +
+  theme_minimal() +
+  theme(legend.position = "top")
+
+plot4 <- ggplot(data = dados, aes(x = RSRESR_BACKUP, fill = CensuraPlot)) +
+  geom_bar(width = 0.5, position = "dodge") +
+  labs(x = "Regional de saúde", y = "Quantidade") + 
+  labs(fill = "Óbito") +
+  scale_fill_manual(values = c("steelblue", "darkgray")) +
+  theme_minimal() +
+  theme(legend.position = "top")
+
+grid.arrange(plot3,plot4, ncol = 2, nrow = 1)
+```
+
+---
+# Análise Descritiva 
+
+![](tab1.png)
+
+---
+# Análise Descritiva 
+
+## Estimador de Kaplan-Meier
+
+```{r, include= FALSE, message= FALSE, warning= FALSE}
+setwd("~/RStudio Facul/CE094 - Laboratório B/tcc-hantavirose/Apresentação")
+```
+
+
+<center><img src="C:/Users/Pedro/Documents/RStudio Facul/CE094 - Laboratório B/tcc-hantavirose/Apresentação/kaplan1.PNG" height="400px" width="460px" ></center> 
+
+---
+# Análise Descritiva 
+
+## Estimador de Kaplan-Meier
+
+<center><img src="C:/Users/Pedro/Documents/RStudio Facul/CE094 - Laboratório B/tcc-hantavirose/Apresentação/kaplan2.PNG" height="400px" width="460px" ></center> 
+
+---
+# Análise Descritiva 
+
+## Estimador de Kaplan-Meier
+
+<center><img src="C:/Users/Pedro/Documents/RStudio Facul/CE094 - Laboratório B/tcc-hantavirose/Apresentação/kaplan3.PNG" height="400px" width="460px" ></center> 
+
+---
+# Análise Descritiva 
+
+## Estimador de Kaplan-Meier
+
+<center><img src="C:/Users/Pedro/Documents/RStudio Facul/CE094 - Laboratório B/tcc-hantavirose/Apresentação/kaplan4.PNG" height="200px" width="460px" ></center> 
+
+---
+# Análise Descritiva 
+
+## Estimador de Kaplan-Meier
+
+- Resumo dos valores do teste log-rank
+
+<center><img src="C:/Users/Pedro/Documents/RStudio Facul/CE094 - Laboratório B/tcc-hantavirose/Apresentação/log-rank.PNG" height="250px" width="240px" ></center> 
+
+---
+# Modelo de Fração de Cura
+
+- Utilização do pacote *smcure*.
+
+- Criação de variáveis dummy.
+
+- Dois ajustes foram realizados:
+  
+  - 1º Ajuste: Um modelo para cada variável.
+  - 2º Ajuste: Apenas com as variáveis que se mostraram significativas no modelo múltiplo.
+
+- Modelo de Riscos Proporcionais para modelar a parte latente.
+
+---
+# Modelo de Fração de Cura
+
+- 1º Ajuste
+
+<center><img src="C:/Users/Pedro/Documents/RStudio Facul/CE094 - Laboratório B/tcc-hantavirose/Apresentação/modelo1.PNG" height="280px" width="800px" ></center> 
+---
+# Modelo de Fração de Cura
+
+- 2º Ajuste (Probabilidade de Óbito):
+
+<center><img src="C:/Users/Pedro/Documents/RStudio Facul/CE094 - Laboratório B/tcc-hantavirose/Apresentação/modelo2.PNG" height="100px" width="280px" ></center> 
+
+  - Probabilidade de óbito pode ser dada por:
+
+$$\pi(z) = 1 - \frac{exp(\textbf{bz})}{1+exp(\textbf{bz})} = 0,082$$
+
+- 2º Ajuste (Tempo de Falha):
+
+<center><img src="C:/Users/Pedro/Documents/RStudio Facul/CE094 - Laboratório B/tcc-hantavirose/Apresentação/modelo3.PNG" height="100px" width="260px" ></center> 
+
+---
+# Considerações finais
+
+- Muita dificuldade para tratativa e usabilidade das informações.
+
+- Alta quantidade de dados missing.
+
+- Muitos problemas com a utilização do pacote **smcure**.
+
+- Resultados do modelo de Fração de Cura foram satisfatórios. Variáveis semelhantes com o trabalho apresentado pela Daniele Akemi Arita.
+
+- Servir de base para estudos posteriores com dados mais contundentes.
+
+---
 
 # Referências
 
-1. Cai C, Zou Y, Peng Y, Zhang J. smcure: an R-package for estimating semiparametric mixture cure models. Comput Methods Programs Biomed. 2012;108(3):1255-1260. doi:10.1016/j.cmpb.2012.08.013.
+Cai C, Zou Y, Peng Y, Zhang J. smcure: an R-package for estimating semiparametric mixture cure models. Comput Methods Programs Biomed. 2012;108(3):1255-1260. doi:10.1016/j.cmpb.2012.08.013.
 
-2. Zhang J, Peng Y. Semiparametric Estimation Methods for the Accelerated Failure Time Mixture Cure Model. J Korean Stat Soc. 2012;41(3):415-422. doi:10.1016/j.jkss.2012.01.003.
+Zhang J, Peng Y. Semiparametric Estimation Methods for the Accelerated Failure Time Mixture Cure Model. J Korean Stat Soc. 2012;41(3):415-422. doi:10.1016/j.jkss.2012.01.003.
 
-3. Berkson J, Gage R. Survival curve for cancer patients following treatment. Journal of the American Statistical Association. 1952;47:501–515.
+Berkson J, Gage R. Survival curve for cancer patients following treatment. Journal of the American Statistical Association. 1952;47:501–515.
 
-4. Boag J. Maximum likelihood estimates of the proportion of patients cured by cancer therapy. Journal of the Royal Statistical Society Series B  1949;11(1):15–53.
+Boag J. Maximum likelihood estimates of the proportion of patients cured by cancer therapy. Journal of the Royal Statistical Society Series B  1949;11(1):15–53.
 
-5. Li C-S, Taylor JMG. A semi-parametric accelerated failure time cure model. Statist. Med. 2002;21(21):3235–3247.
+Li C-S, Taylor JMG. A semi-parametric accelerated failure time cure model. Statist. Med. 2002;21(21):3235–3247.
 
 ---
 
+# Referências
 
+ARITA, D. A. Survival of persons with hantavirus infection diagnosed in parana state, brazil. Cadernos de Saude Publica, Fundacao Oswaldo Cruz, v. 35, 2019. ISSN 16784464.
+
+BBC. 2021. Disponível em: <https://www.bbc.com/portuguese/brasil-57245848>.
+
+BOTELHO, F.; SILVA, C.; CRUZ, F. Artigos de revisão epidemiologia explicada-análise de sobrevivência. 2009. Disponível em: <www.apurologia.pt>.
+
+KRUGER, D. H. et al. Hantaviruses–globally emerging pathogens. Journal of clinical virology : the official publication of the Pan American Society for Clinical Virology, J Clin Virol, v. 64, p. 128–136, 3 2015. ISSN 1873-5967. Disponível em: <https://pubmed.ncbi.nlm.nih.gov/25453325/>.
+
+OLIVEIRA, S. V. D.; DUARTE, E. C. Magnitude and distribution of deaths due to hantavirus in brazil, 2007-2015. Epidemiol. Serv. Saude, v. 27, p. 11, 2018.
+
+---
+# Referências
+
+COLOSIMO, E. A. et al. Análise de sobrevivência aplicada. Revista Entreteses, p. 77, 2006. Disponível em: <http://cursodegestaoelideranca.paginas.ufsc.br/files/2016/03/Apostila-OrientaÃğÃčo-ao-TCC.pdf>.
+
+TEAM, R. D. C. Download R-4.0.4 for Windows. The R-project for statistical computing. 2021. Disponível em: <https://cran.r-project.org/bin/windows/base/>.
+
+THERNEAU, T. M. Survival analysis [r package survival version 3.4-0]. Comprehensive R Archive Network (CRAN), 8 2022. Disponível em: <https://CRAN.R-project.org/
+package=survival>.
+
+---
+# Fim
+
+Obrigado.
+
+---

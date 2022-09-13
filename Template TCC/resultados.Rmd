@@ -160,7 +160,7 @@ Quanto as variáveis relacionadas a sintomas, na Tabela 1 são apresentadas as f
 
 \begin{table}[ht]
 \centering
-\caption{Frequências absolutas, relativas, quantidade de censuras e quantidade de falhas para as variáveis dicotômicas.} 
+\caption{Frequências absolutas, relativas, quantidade de censuras e quantidade de falhas para as variáveis dicotômicas apenas para a categoria sim.} 
 \begin{tabular}{lcccccc}
   \hline
  & Variável & Freq.Absoluta & Freq.Relativa & Censura & Falha \\ 
@@ -188,7 +188,7 @@ Os sintomas que se mostraram mais letais entre os estudados com 94 (33,5%) e 92 
 
 Na sequência, foi realizada uma análise uni variada (uma a uma) das variáveis presentes no estudo. Para isso, foi utilizado o estimador de Kaplan-Meier que nos permite visualizar as curvas de sobrevida associadas às categorias de cada variável, auxiliando assim a verificar a existência de associação delas com o tempo até o óbito. 
 
-Buscando oferecer uma melhor visualização dos resultados, os gráficos foram divididos em duas figuras A Figura 4 contém 8 das 14 imagens, e o restante presente na Figura 5. O valor p resultante do teste logrank calculado está presente no canto inferior esquerdo de cada uma das imagens.
+Buscando oferecer uma melhor visualização dos resultados, os gráficos foram divididos em duas figuras. A Figura 4 contém 8 das 14 imagens, e o restante presente na Figura 5. O valor p resultante do teste logrank calculado está presente no canto inferior esquerdo de cada uma das imagens.
 
 Na Figura 4 as variáveis Idade, Sexo, Tontura, Cefaleia, Sangramento Respiratório, Dispneia e Hipotensão se mostraram significativas através do teste *logrank*, com valores p inferiores a 0,10. Embora significativas, as variáveis Sexo e Cefaleia apresentaram um intervalo de confiança bem elevado.
 
@@ -378,7 +378,7 @@ Ajustado um modelo para cada uma das variáveis selecionadas na seção 5.1, par
 
 Para o tempo de falha, as variáveis que se mostraram significativas ao nível de 10% de confiança foram Sexo, Tontura, Sangramento Respiratório, Regional de Saúde para os níveis Irati e Outros, Diarreia e Respirador Mecânico. Olhando para a variável sangramento respiratório como exemplo, olhando para o coeficiente concluímos que pacientes que apresentaram esse sintoma tem um aumento no tempo médio de falha.
 
-Na segunda etapa, foi ajustado um modelo com todas as variáveis, novamente avaliando as que são significativas ao nível de significância de 0,10. As que apresentaram um nível de significância abaixo do estabelecido foram retiradas do modelo. Conforme mencionado na seção 4.2.3.1, importante lembrar que uma mesma covariável pode ser utilizada tanto para modelar o óbito quanto para modelar o tempo de falha, da mesma forma que uma covariável pode ser significativa para explicar o óbito, mas não significativa para explicar o tempo de falha e vice-versa.
+Na segunda etapa, foi ajustado um modelo com todas as variáveis, novamente avaliando as que são significativas ao nível de significância de 0,10. As que apresentaram um nível de significância abaixo do estabelecido foram retiradas do modelo. Conforme mencionado na Seção 4.2.3.1, importante lembrar que uma mesma covariável pode ser utilizada tanto para modelar o óbito quanto para modelar o tempo de falha, da mesma forma que uma covariável pode ser significativa para explicar o óbito, mas não significativa para explicar o tempo de falha e vice-versa.
 
 A partir da Tabela 3 observam-se as estimativas dadas pelos modelos apenas com as variáveis significativas para o explicar o óbito e o tempo de falha respectivamente.
 
@@ -421,7 +421,7 @@ Para a probabilidade de óbito as variáveis que restaram foram Sexo, Tontura, S
 
 \begin{table}[h!]
 \centering
-\caption{Estimativas para a probabilidade de óbito do modelo final.} 
+\caption{Estimativas das variáveis significativas para a probabilidade de óbito do modelo final.} 
 \begin{tabular}{lcccccccc}
   \hline
  & Parâmetro & Categoria & Coeficiente \\ 
@@ -439,19 +439,19 @@ Para a probabilidade de óbito as variáveis que restaram foram Sexo, Tontura, S
 
 As que apresentaram um coeficiente negativo, ou seja, diminuem a probabilidade de óbito são Sexo (masculino), tontura e cefaleia. As demais apresentaram um coeficiente positivo.
 
-Conforme apresentado na seção 4.2.3, a probabilidade de óbito pode ser calculada baseada nos resultados da parte de probabilidade de Cura do modelo. Para um indivíduo do Sexo masculino, que apresentou todos os sintomas da Tabela 3, a probabilidade de cura é dada por:
+Conforme apresentado na Seção 4.2.3, a probabilidade de óbito pode ser calculada baseada nos resultados da parte de probabilidade de Cura do modelo. Para um indivíduo do Sexo masculino, que apresentou todos os sintomas da Tabela 3, a probabilidade de cura é dada por:
 
 $$
 \pi(z) = 1 - \frac{exp(\textbf{bz})}{1+exp(\textbf{bz})} = 0,082
 $$
-
+Ou seja, paciente do sexo masculino que apresentaram os sintomas da Tabela 3 tem uma probabilidade de cura de 8.2%. 
 
 Para o tempo de falha restaram Sexo, Sinais hemorrágicos, Respirador Mecânico, Cefaleia e Hipotensão.
 
 
 \begin{table}[h!]
 \centering
-\caption{Estimativas para o tempo de falha do modelo final.}
+\caption{EEstimativas das variáveis significativas para o tempo de falha do modelo final.}
 \begin{tabular}{lcccccccc}
   \hline
  & Parâmetro & Categoria & Coeficiente \\ 

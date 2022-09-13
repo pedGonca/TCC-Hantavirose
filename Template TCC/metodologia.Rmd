@@ -122,7 +122,7 @@ Uma vantagem do modelo de fração de cura é a modelagem de indivíduos curados
 
 Geralmente, a função de ligação logito é usada para modelar o efeito $z$, mas o pacote também permite a utilização de outras funções de ligação.
 
-#### Método Computacional
+#### Método de Estimação
 
 Conforme mencionado na seção 4.1.2, o pacote com a implementação utilizado será o smcure, portanto é importante ressaltar algumas particularidades e explicar a parte computacional do método.
 

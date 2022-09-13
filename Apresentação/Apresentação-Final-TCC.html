@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>FATORES DE RISCO PARA ÓBITO POR HANTAVIROSE NO PARANÁ, 1992-2016; ABORDAGEM VIA UM MODELO DE FRAÇÃO DE CURA.</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Aluno: Pedro H P Gonçalves" />
+    <meta name="author" content="Orientador(a): Dra. Silvia Emiko Shimakura (UFPR)" />
+    <script src="libs/header-attrs-2.16/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/middlebury.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/middlebury-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# FATORES DE RISCO PARA ÓBITO POR HANTAVIROSE NO PARANÁ, 1992-2016;
+ABORDAGEM VIA UM MODELO DE FRAÇÃO DE CURA.
+## Laboratório B
+### Aluno: Pedro H P Gonçalves
+### Orientador(a): Dra. Silvia Emiko Shimakura (UFPR)
+
+---
+
+
+&lt;style type="text/css"&gt;
+/* Table width = 100% max-width */
+
+.remark-slide table{
+    width: 100%;
+}
+
+/* Change the background color to white for shaded rows (even rows) */
+
+.remark-slide thead, .remark-slide tr:nth-child(3n) {
+    background-color: white;
+}
+&lt;/style&gt;
+
+
+
+
+# Introdução
+
+## Motivação da Pesquisa
+
+- Hantavirose:
+
+  - Transmitida por ratos do campo.
+
+  - Podem ocorrer por meio de escoriações cutâneas ou mordedura de roedores.
+  
+  - Sintomas semelhantes a gripe.
+
+  - Não existe um tratamento específico para as infecções por hantavírus.
+
+- Entender os fatores de risco para óbito por hantavirose via Análise de Sobrevivência (Modelo de Fração de Cura).
+  
+  - Estender o trabalho de Mestrado da Daniele Akemi Arita.
+
+---
+# Introdução
+
+## Análise de Sobrevivência
+
+- Tempo de duração esperado até a ocorrência de um ou mais eventos.
+
+- Área em crescimento na últimas décadas:
+  - De 11% em 1979 para 32% em 1989 nos artigos do The New England Journal of Medicine.
+  
+- Muito empregada pelas ciências da saúde, biológicas e engenharias.
+
+---
+# Introdução
+
+## Caracterização dos Dados de Sobrevivência
+
+- Presença de informações incompletas/parciais.
+
+- Dados comuns poderiam ser explicados por uma regressão simples.
+
+- Principal característica é a presença de censura.
+
+- Tempo de Falha:
+  - Tempo até a ocorrência de um evento de interesse (óbito).
+
+- Censura:
+  - Observação parcial das respostas.
+
+---
+# Materiais e Métodos
+
+## Conjunto de Dados
+
+- Sistema de Informação de Agravos de Notificação (SINAN).
+
+- Casos confirmados de janeiro de 1992 a junho de 2016.
+
+  - 280 0bservações
+  - 69 Variáveis
+
+- Software R versão 4.0.4
+  - survival.
+  - smcure.
+
+---
+# Material e Métodos
+![](ficha_cadastro.png)
+---
+# Materiais e Métodos
+
+## Função de Sobrevivência
+
+- Principal função da Análise de Sobrevivência.
+
+- Probabilidade da falha ocorrer até o tempo t.
+
+`$$S(t) = P(T\geqslant t)$$`
+Apresenta uma forma diferente de acordo com o modelo de interesse.
+
+## Estimador de Kaplan-Meier
+
+- Função não paramétrica que utiliza `\(S(t)\)` em forma de uma função escada com degraus.
+
+`$$\hat{S}(t) = P(T&gt;t) = \prod_{j:t_j&lt;t}(\frac{n_j-d_j}{n_j}) = \prod_{j:tj&lt;t}(1-\frac{d_j}{n_j})$$`
+
+---
+# Materiais e Métodos
+
+## Censura
+
+- Tipos de censura
+
+  - Censura tipo 1.
+
+  - Censura tipo 2.
+
+  - Censura Aleatória.
+
+- Função indicadora de censura
+
+$$
+\delta = 
+`\begin{cases}
+ &amp; 1, \text{ se t é um tempo de falha } \\ 
+ &amp; 0, \text{ se t é um tempo censurado }
+\end{cases}`
+$$
+
+---
+
+# Materiais e Métodos
+
+## Modelo de Fração de Cura
+
+- Modelo de fração de cura Semiparamétrico: Tipo especial de modelo de sobrevivência.
+
+- Estimar a taxa de cura do tratamento e a taxa de sobrevivência de pacientes não curados ao mesmo tempo.
+
+- Pode ser expresso como:
+
+`$$S_{pop}(t|x,z) = \pi(z)S(t|x) + 1 - \pi(z)$$`, onde `\(1 - \pi(z)\)` é a probabilidade de um paciente ser curado dependendo de `\(z\)`.
+
+- `\(S(t|x)\)` é referido como "latência" (não observada).
+
+---
+
+# Materiais e Métodos
+
+## Modelo de Fração de Cura
+
+- Geralmente utiliza função logito para modelar o efeito de *z*
+
+`$$\pi(z) = \frac{exp(bz)}{1 + exp(bz)}$$`
+
+- `\(b\)` vetor de paramêtros desonhecidos.
+
+- Permite outras funções de ligação.
+
+---
+
+# Materiais e Métodos
+
+## Método de Estimação
+
+- Parâmetros estimados via algoritmo EM (algoritmo de maximização de expectativa)
+
+- Função de Verossimilhança:
+
+$$
+\prod_{i=1}^{n}[1 - \pi(z_i)]^{1-y_i}\pi(z_i)^{y_i}{h(t_i|Y=1, X_i)}^{\delta_iy_i}{S(t_i|Y=1,X_i)}^{Y_I}
+$$
+
+Onde `\(\textbf{O} = (t_i,\delta, z_i,x_i)\)` e `\(\Theta = (b,\beta,S_0(t))\)`.
+
+- Utiliza amostras bootstrap para os erros padrões.
+
+---
+# Análise Descritiva 
+
+## Material final do estudo
+
+- Exclusão de variáveis
+
+---
+# Análise Descritiva 
+
+## Material final do estudo
+
+1. **Tempo**: Tempo decorrido do primeiro sintoma do paciente até o óbito ou perda do acompanhamento.
+2. **Idade**: Idade do paciente.
+3. **Sexo**: Sexo do paciente.
+4. **Tontura**: Apresentou tontura.
+5. **Cefaleia**: Apresentou cefaleia.
+6. **Sangramento Respiratório**: Apresentou sangramento respiratório.
+7. **Dispneia**: Apresentou falta de ar.
+8. **Hipotensão**: Apresentou problemas com pressão baixa.
+9. **Mialgia**: Apresentou dores musculares.
+10. **Regional de Saúde**: Regional de saúde na qual o paciente foi atendido.
+11. **Sinais Hemorrágicos**: Apresentou sinais hemorrágicos.
+12. **Internação**: Paciente foi internado no período em que esteve com a doença.
+13. **Diarreia**: Apresentou diarreia.
+14. **Respirador Mecânico**: Precisou de respirador mecânico.
+
+---
+
+# Análise Descritiva  
+
+ - Idade:
+     - Entre 0 até 19 anos 
+     - Entre 20 até 29 anos
+     - Entre 30 a 39 anos
+     - Entre 40 a 49 anos
+     - Entre 50 a 59 anos
+     - Maior ou igual a 60
+ 
+ - Regional de Saúde:
+     - Guarapuava
+     - Irati
+     - Outros
+     - União da Vitória
+ 
+ - Sexo:
+     - Masculino
+     - Feminino
+
+---
+# Análise Descritiva  
+
+![Distribuição das variáveis Idade e Sexo](Apresentação-Final-TCC_files/figure-html/fig2-1.png)
+
+---
+# Análise Descritiva 
+
+![Distribuição das variáveis Idade e Sexo](Apresentação-Final-TCC_files/figure-html/fig1-1.png)
+
+---
+# Análise Descritiva 
+
+![](tab1.png)
+
+---
+# Análise Descritiva 
+
+## Estimador de Kaplan-Meier
+
+
+
+
+&lt;center&gt;&lt;img src="C:/Users/Pedro/Documents/RStudio Facul/CE094 - Laboratório B/tcc-hantavirose/Apresentação/kaplan1.PNG" height="400px" width="460px" &gt;&lt;/center&gt; 
+
+---
+# Análise Descritiva 
+
+## Estimador de Kaplan-Meier
+
+&lt;center&gt;&lt;img src="C:/Users/Pedro/Documents/RStudio Facul/CE094 - Laboratório B/tcc-hantavirose/Apresentação/kaplan2.PNG" height="400px" width="460px" &gt;&lt;/center&gt; 
+
+---
+# Análise Descritiva 
+
+## Estimador de Kaplan-Meier
+
+&lt;center&gt;&lt;img src="C:/Users/Pedro/Documents/RStudio Facul/CE094 - Laboratório B/tcc-hantavirose/Apresentação/kaplan3.PNG" height="400px" width="460px" &gt;&lt;/center&gt; 
+
+---
+# Análise Descritiva 
+
+## Estimador de Kaplan-Meier
+
+&lt;center&gt;&lt;img src="C:/Users/Pedro/Documents/RStudio Facul/CE094 - Laboratório B/tcc-hantavirose/Apresentação/kaplan4.PNG" height="200px" width="460px" &gt;&lt;/center&gt; 
+
+---
+# Análise Descritiva 
+
+## Estimador de Kaplan-Meier
+
+- Resumo dos valores do teste log-rank
+
+&lt;center&gt;&lt;img src="C:/Users/Pedro/Documents/RStudio Facul/CE094 - Laboratório B/tcc-hantavirose/Apresentação/log-rank.PNG" height="250px" width="240px" &gt;&lt;/center&gt; 
+
+---
+# Modelo de Fração de Cura
+
+- Utilização do pacote *smcure*.
+
+- Criação de variáveis dummy.
+
+- Dois ajustes foram realizados:
+  
+  - 1º Ajuste: Um modelo para cada variável.
+  - 2º Ajuste: Apenas com as variáveis que se mostraram significativas no modelo múltiplo.
+
+- Modelo de Riscos Proporcionais para modelar a parte latente.
+
+---
+# Modelo de Fração de Cura
+
+- 1º Ajuste
+
+&lt;center&gt;&lt;img src="C:/Users/Pedro/Documents/RStudio Facul/CE094 - Laboratório B/tcc-hantavirose/Apresentação/modelo1.PNG" height="280px" width="800px" &gt;&lt;/center&gt; 
+---
+# Modelo de Fração de Cura
+
+- 2º Ajuste (Probabilidade de Óbito):
+
+&lt;center&gt;&lt;img src="C:/Users/Pedro/Documents/RStudio Facul/CE094 - Laboratório B/tcc-hantavirose/Apresentação/modelo2.PNG" height="100px" width="280px" &gt;&lt;/center&gt; 
+
+  - Probabilidade de óbito pode ser dada por:
+
+`$$\pi(z) = 1 - \frac{exp(\textbf{bz})}{1+exp(\textbf{bz})} = 0,082$$`
+
+- 2º Ajuste (Tempo de Falha):
+
+&lt;center&gt;&lt;img src="C:/Users/Pedro/Documents/RStudio Facul/CE094 - Laboratório B/tcc-hantavirose/Apresentação/modelo3.PNG" height="100px" width="260px" &gt;&lt;/center&gt; 
+
+---
+# Considerações finais
+
+- Muita dificuldade para tratativa e usabilidade das informações.
+
+- Alta quantidade de dados missing.
+
+- Muitos problemas com a utilização do pacote **smcure**.
+
+- Resultados do modelo de Fração de Cura foram satisfatórios. Variáveis semelhantes com o trabalho apresentado pela Daniele Akemi Arita.
+
+- Servir de base para estudos posteriores com dados mais contundentes.
+
+---
+
+# Referências
+
+Cai C, Zou Y, Peng Y, Zhang J. smcure: an R-package for estimating semiparametric mixture cure models. Comput Methods Programs Biomed. 2012;108(3):1255-1260. doi:10.1016/j.cmpb.2012.08.013.
+
+Zhang J, Peng Y. Semiparametric Estimation Methods for the Accelerated Failure Time Mixture Cure Model. J Korean Stat Soc. 2012;41(3):415-422. doi:10.1016/j.jkss.2012.01.003.
+
+Berkson J, Gage R. Survival curve for cancer patients following treatment. Journal of the American Statistical Association. 1952;47:501–515.
+
+Boag J. Maximum likelihood estimates of the proportion of patients cured by cancer therapy. Journal of the Royal Statistical Society Series B  1949;11(1):15–53.
+
+Li C-S, Taylor JMG. A semi-parametric accelerated failure time cure model. Statist. Med. 2002;21(21):3235–3247.
+
+---
+
+# Referências
+
+ARITA, D. A. Survival of persons with hantavirus infection diagnosed in parana state, brazil. Cadernos de Saude Publica, Fundacao Oswaldo Cruz, v. 35, 2019. ISSN 16784464.
+
+BBC. 2021. Disponível em: &lt;https://www.bbc.com/portuguese/brasil-57245848&gt;.
+
+BOTELHO, F.; SILVA, C.; CRUZ, F. Artigos de revisão epidemiologia explicada-análise de sobrevivência. 2009. Disponível em: &lt;www.apurologia.pt&gt;.
+
+KRUGER, D. H. et al. Hantaviruses–globally emerging pathogens. Journal of clinical virology : the official publication of the Pan American Society for Clinical Virology, J Clin Virol, v. 64, p. 128–136, 3 2015. ISSN 1873-5967. Disponível em: &lt;https://pubmed.ncbi.nlm.nih.gov/25453325/&gt;.
+
+OLIVEIRA, S. V. D.; DUARTE, E. C. Magnitude and distribution of deaths due to hantavirus in brazil, 2007-2015. Epidemiol. Serv. Saude, v. 27, p. 11, 2018.
+
+---
+# Referências
+
+COLOSIMO, E. A. et al. Análise de sobrevivência aplicada. Revista Entreteses, p. 77, 2006. Disponível em: &lt;http://cursodegestaoelideranca.paginas.ufsc.br/files/2016/03/Apostila-OrientaÃğÃčo-ao-TCC.pdf&gt;.
+
+TEAM, R. D. C. Download R-4.0.4 for Windows. The R-project for statistical computing. 2021. Disponível em: &lt;https://cran.r-project.org/bin/windows/base/&gt;.
+
+THERNEAU, T. M. Survival analysis [r package survival version 3.4-0]. Comprehensive R Archive Network (CRAN), 8 2022. Disponível em: &lt;https://CRAN.R-project.org/
+package=survival&gt;.
+
+---
+# Fim
+
+Obrigado.
+
+---
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create();
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
