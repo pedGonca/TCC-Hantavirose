@@ -1,0 +1,40 @@
+Começar com a motivação dessa pesquisa.
+A hantavirose, zoonose viral, ou seja uma doença infecciosa passada de um animal para um humano, é uma doença transmitida por ratos do campos.
+
+Essa infecção pode ocorrer por meio de escoriação cutânea ou através da mordida do roedor infectado. Diferente dos seres humanos, os ratos
+podem passar sua vida inteira contendo a doença sem apresentar nenhum tipo de sintoma.
+
+Apresenta sintomas muito semelhantes aos de uma gripe, mas conta também com a presença de sintomas mais severos, como sangramento respiratório, dificuldade para respirar entre outros
+
+Segundo a OMS, não existe nenhum tipo de tratamento, cura ou vacina para a infecção, o que tem aumentado a preocupação de autoridades de saúde publica não só no Brasil, mas em diversos paises do mundo
+
+Ddadas as circunstâncias, o trabalho utiliza de uma base de dados de infectados pela hantavirose e utiliza de métodos de Análise de Sobrevivência para entender os 
+fatores de risco para o óbito dos pacientes infectados.
+
+Importante ressaltar que a intenção também é estender as análises feitas com a mesma base pela Daniele Akemi Arita.
+
+Mas então, o que é Análise de Sobrevivência. É um ramo da estatística que estuda o tempo de duração esperado até a ocorrência de um ou mais eventos.
+
+Devido a evolução da medicina e necessidade de estudos detalhados aliado a evolução da tecnologia, esse ramo passou por uma grande crescente nas últimas decadas. Dos artigos publicados no renomado
+The New England Journal of Medicine em 1979 11% deles apresentavam algo sobre Análise de Sobrevivência na análise, número que passou para 32% dos artigos em 1989
+
+É muito empregada pela área da saúde e biológicas, mas também nas engenharias. Um dos trabalhos relacionados a área que eu li utilizava Análise de Sobrevivência para estimar 
+a vida útil dos componentes de uma obra.
+
+Mas o que caracteriza um dado dessa tal análise de Sobrevivência?
+A princípal caracteristica desses dados é a presença de informação imcompletas ou parciais, que são chamadas de censura e podem ocorrer pelos mais diversos motivos. 
+Seja porque um paciente do estudo mudou de cidade, foi perdido o contato com o paciente e etc. A única informação para esses indvíduos é de que eles apresentaram
+um tempo até a ocorrência do evento de interesse superior ao temmpo registrado até a data do ultimo acompanhamento.
+Se não fosse a presença de censura técnicas usuais da estatística com uma análise de regressão seria o suficiente, mas como existe a necessidade de incorporar as informações presentes na
+censura faz-se necessário o uso de técnicas de Análise de Sobrevivência.
+
+Explicar tempo de falha
+
+Explicar Censura
+
+
+
+
+
+
+

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.9.4)  13 SEP 2022 10:02
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.9.4)  26 SEP 2022 18:55
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -930,100 +930,119 @@ File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 
 ] [11] [12
 
-] [13] [14] [15] [16] [17
+] [13] [14]
+
+LaTeX Warning: Command \textperiodcentered invalid in math mode on input line 423.
+
+
+LaTeX Warning: Command \textperiodcentered invalid in math mode on input line 423.
+
+
+LaTeX Warning: Command \textperiodcentered invalid in math mode on input line 423.
+
+
+LaTeX Warning: Command \textperiodcentered invalid in math mode on input line 423.
+
+
+LaTeX Warning: Command \textperiodcentered invalid in math mode on input line 423.
+
+
+LaTeX Warning: Command \textperiodcentered invalid in math mode on input line 423.
+
+[15] [16] [17] [18
 
 ]
-<main_files/figure-latex/fig1-1.pdf, id=252, 461.725pt x 259.97125pt>
+<main_files/figure-latex/fig1-1.pdf, id=257, 461.725pt x 259.97125pt>
 File: main_files/figure-latex/fig1-1.pdf Graphic file (type pdf)
 <use main_files/figure-latex/fig1-1.pdf>
-Package pdftex.def Info: main_files/figure-latex/fig1-1.pdf  used on input line 525.
+Package pdftex.def Info: main_files/figure-latex/fig1-1.pdf  used on input line 542.
 (pdftex.def)             Requested size: 364.00139pt x 204.95058pt.
-<main_files/figure-latex/fig2-1.pdf, id=253, 361.35pt x 158.5925pt>
+<main_files/figure-latex/fig2-1.pdf, id=258, 361.35pt x 158.5925pt>
 File: main_files/figure-latex/fig2-1.pdf Graphic file (type pdf)
 <use main_files/figure-latex/fig2-1.pdf>
-Package pdftex.def Info: main_files/figure-latex/fig2-1.pdf  used on input line 540.
+Package pdftex.def Info: main_files/figure-latex/fig2-1.pdf  used on input line 557.
 (pdftex.def)             Requested size: 364.00139pt x 159.75848pt.
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-<main_files/figure-latex/fig3-1.pdf, id=254, 361.35pt x 158.5925pt>
+<main_files/figure-latex/fig3-1.pdf, id=259, 361.35pt x 158.5925pt>
 File: main_files/figure-latex/fig3-1.pdf Graphic file (type pdf)
 <use main_files/figure-latex/fig3-1.pdf>
-Package pdftex.def Info: main_files/figure-latex/fig3-1.pdf  used on input line 551.
+Package pdftex.def Info: main_files/figure-latex/fig3-1.pdf  used on input line 568.
 (pdftex.def)             Requested size: 364.00139pt x 159.75848pt.
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-[18 <./main_files/figure-latex/fig1-1.pdf>] [19 <./main_files/figure-latex/fig2-1.pdf> <./main_files/figure-latex/fig3-1.pdf>] [20]
-<main_files/figure-latex/unnamed-chunk-12-1.pdf, id=288, 433.62pt x 180.675pt>
+[19 <./main_files/figure-latex/fig1-1.pdf>] [20 <./main_files/figure-latex/fig2-1.pdf> <./main_files/figure-latex/fig3-1.pdf>] [21]
+<main_files/figure-latex/unnamed-chunk-12-1.pdf, id=292, 433.62pt x 180.675pt>
 File: main_files/figure-latex/unnamed-chunk-12-1.pdf Graphic file (type pdf)
 <use main_files/figure-latex/unnamed-chunk-12-1.pdf>
-Package pdftex.def Info: main_files/figure-latex/unnamed-chunk-12-1.pdf  used on input line 599.
+Package pdftex.def Info: main_files/figure-latex/unnamed-chunk-12-1.pdf  used on input line 616.
 (pdftex.def)             Requested size: 364.00139pt x 151.67497pt.
-<main_files/figure-latex/unnamed-chunk-13-1.pdf, id=289, 433.62pt x 180.675pt>
+<main_files/figure-latex/unnamed-chunk-13-1.pdf, id=293, 433.62pt x 180.675pt>
 File: main_files/figure-latex/unnamed-chunk-13-1.pdf Graphic file (type pdf)
 <use main_files/figure-latex/unnamed-chunk-13-1.pdf>
-Package pdftex.def Info: main_files/figure-latex/unnamed-chunk-13-1.pdf  used on input line 601.
+Package pdftex.def Info: main_files/figure-latex/unnamed-chunk-13-1.pdf  used on input line 618.
 (pdftex.def)             Requested size: 364.00139pt x 151.67497pt.
-<main_files/figure-latex/unnamed-chunk-14-1.pdf, id=290, 433.62pt x 180.675pt>
+<main_files/figure-latex/unnamed-chunk-14-1.pdf, id=294, 433.62pt x 180.675pt>
 File: main_files/figure-latex/unnamed-chunk-14-1.pdf Graphic file (type pdf)
 <use main_files/figure-latex/unnamed-chunk-14-1.pdf>
-Package pdftex.def Info: main_files/figure-latex/unnamed-chunk-14-1.pdf  used on input line 603.
+Package pdftex.def Info: main_files/figure-latex/unnamed-chunk-14-1.pdf  used on input line 620.
 (pdftex.def)             Requested size: 364.00139pt x 151.67497pt.
-<main_files/figure-latex/fig4-1.pdf, id=291, 433.62pt x 180.675pt>
+<main_files/figure-latex/fig4-1.pdf, id=295, 433.62pt x 180.675pt>
 File: main_files/figure-latex/fig4-1.pdf Graphic file (type pdf)
 <use main_files/figure-latex/fig4-1.pdf>
-Package pdftex.def Info: main_files/figure-latex/fig4-1.pdf  used on input line 607.
+Package pdftex.def Info: main_files/figure-latex/fig4-1.pdf  used on input line 624.
 (pdftex.def)             Requested size: 364.00139pt x 151.67497pt.
-[21 <./main_files/figure-latex/unnamed-chunk-12-1.pdf> <./main_files/figure-latex/unnamed-chunk-13-1.pdf> <./main_files/figure-latex/unnamed-chunk-14-1.pdf> <./main_files/figure-latex/fig4-1.pdf>]
-<main_files/figure-latex/unnamed-chunk-15-1.pdf, id=329, 433.62pt x 180.675pt>
+[22 <./main_files/figure-latex/unnamed-chunk-12-1.pdf> <./main_files/figure-latex/unnamed-chunk-13-1.pdf> <./main_files/figure-latex/unnamed-chunk-14-1.pdf> <./main_files/figure-latex/fig4-1.pdf>]
+<main_files/figure-latex/unnamed-chunk-15-1.pdf, id=333, 433.62pt x 180.675pt>
 File: main_files/figure-latex/unnamed-chunk-15-1.pdf Graphic file (type pdf)
 <use main_files/figure-latex/unnamed-chunk-15-1.pdf>
-Package pdftex.def Info: main_files/figure-latex/unnamed-chunk-15-1.pdf  used on input line 616.
+Package pdftex.def Info: main_files/figure-latex/unnamed-chunk-15-1.pdf  used on input line 633.
 (pdftex.def)             Requested size: 364.00139pt x 151.67497pt.
-<main_files/figure-latex/unnamed-chunk-16-1.pdf, id=330, 433.62pt x 180.675pt>
+<main_files/figure-latex/unnamed-chunk-16-1.pdf, id=334, 433.62pt x 180.675pt>
 File: main_files/figure-latex/unnamed-chunk-16-1.pdf Graphic file (type pdf)
 <use main_files/figure-latex/unnamed-chunk-16-1.pdf>
-Package pdftex.def Info: main_files/figure-latex/unnamed-chunk-16-1.pdf  used on input line 618.
+Package pdftex.def Info: main_files/figure-latex/unnamed-chunk-16-1.pdf  used on input line 635.
 (pdftex.def)             Requested size: 364.00139pt x 151.67497pt.
-<main_files/figure-latex/fig5-1.pdf, id=331, 433.62pt x 180.675pt>
+<main_files/figure-latex/fig5-1.pdf, id=335, 433.62pt x 180.675pt>
 File: main_files/figure-latex/fig5-1.pdf Graphic file (type pdf)
 <use main_files/figure-latex/fig5-1.pdf>
-Package pdftex.def Info: main_files/figure-latex/fig5-1.pdf  used on input line 622.
+Package pdftex.def Info: main_files/figure-latex/fig5-1.pdf  used on input line 639.
 (pdftex.def)             Requested size: 364.00139pt x 151.67497pt.
-[22 <./main_files/figure-latex/unnamed-chunk-15-1.pdf> <./main_files/figure-latex/unnamed-chunk-16-1.pdf> <./main_files/figure-latex/fig5-1.pdf>] [23]
-Overfull \hbox (5.4948pt too wide) in paragraph at lines 656--680
+[23 <./main_files/figure-latex/unnamed-chunk-15-1.pdf> <./main_files/figure-latex/unnamed-chunk-16-1.pdf> <./main_files/figure-latex/fig5-1.pdf>] [24] [25]
+Overfull \hbox (5.4948pt too wide) in paragraph at lines 675--699
  [][] 
  []
 
-[24
+[26
 
-] [25
+] [27
 
-] (./main.bbl [26
+] (./main.bbl [28
 
 ]
 bibitemlist
-[27
+[29
 
-]) [28]
+]) [30]
 \tf@toc=\write4
 \openout4 = `main.toc'.
 
 (./main.aux) ) 
 Here is how much of TeX's memory you used:
- 20582 strings out of 477015
- 342144 string characters out of 5825766
- 844552 words of memory out of 5000000
- 41088 multiletter control sequences out of 15000+600000
- 544680 words of font info for 158 fonts, out of 8000000 for 9000
+ 20587 strings out of 477015
+ 342195 string characters out of 5825766
+ 844550 words of memory out of 5000000
+ 41089 multiletter control sequences out of 15000+600000
+ 544729 words of font info for 159 fonts, out of 8000000 for 9000
  16 hyphenation exceptions out of 8191
  87i,13n,91p,1001b,697s stack positions out of 10000i,1000n,20000p,200000b,200000s
 {c:/Users/Pedro/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{c:/Users/Pedro/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{c:/Users/Pedro/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}{c:/Users/Pedro/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{c:/Users/Pedro/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{c:/Users/Pedro/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}<c:/Users/Pedro/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb><c:/Users/Pedro/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmex10.pfb><c:/Users/Pedro/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi12.pfb><c:/Users/Pedro/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi6.pfb><c:/Users/Pedro/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi8.pfb><c:/Users/Pedro/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb><c:/Users/Pedro/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb><c:/Users/Pedro/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr8.pfb><c:/Users/Pedro/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri12.pfb><c:/Users/Pedro/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmss10.pfb><c:/Users/Pedro/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmss12.pfb><c:/Users/Pedro/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmss17.pfb><c:/Users/Pedro/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmssbx10.pfb><c:/Users/Pedro/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb><c:/Users/Pedro/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy8.pfb><c:/Users/Pedro/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb>
-Output written on main.pdf (29 pages, 390414 bytes).
+Output written on main.pdf (31 pages, 393855 bytes).
 PDF statistics:
- 612 PDF objects out of 1000 (max. 8388607)
- 521 compressed objects within 6 object streams
- 135 named destinations out of 1000 (max. 500000)
+ 621 PDF objects out of 1000 (max. 8388607)
+ 528 compressed objects within 6 object streams
+ 137 named destinations out of 1000 (max. 500000)
  45339 words of extra memory for PDF output out of 51595 (max. 10000000)
 

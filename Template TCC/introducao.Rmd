@@ -1,4 +1,4 @@
-A hantavirose, zoonose viral aguda, cuja infecção em humanos no Brasil, se apresenta na forma da Síndrome Cardiopulmonar por Hantavírus, apresentou seus primeiros casos registrados em 1993, e desde então tem sido notificada em todas as regiões do país.
+A hantavirose, zoonose viral aguda, cuja infecção em humanos no Brasil se apresenta na forma da Síndrome Cardiopulmonar por Hantavírus, apresentou seus primeiros casos registrados em 1993, e desde então tem sido notificada em todas as regiões do país.
 
 Zoonoses são doenças infecciosas que saltam de animais não humano para humanos. Os patógenos zoonóticos podem ser bacterianos, virais ou parasitários, ou podem envolver agentes não convencionais, se espalhando assim para humanos por contato direto ou por meio de alimentos, água ou meio ambiente. Eles representam um grande problema de saúde pública em todo o mundo devido à nossa estreita relação com os animais, seja na agricultura, como companheiros ou no ambiente natural \cite{OMS_zoonoses}.
 
