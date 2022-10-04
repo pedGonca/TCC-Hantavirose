@@ -8,4 +8,4 @@ Este repositório tem como objetivo controlar versão de todo o processo do meu 
 ## Informações
 
 Trabalho de conclusão do curso de Bacharelado em Estatística na UFPR.
-Apresentado no dia xx/xx/xxxx.
+Apresentado no dia 13/09/2022.
